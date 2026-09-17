@@ -1,0 +1,292 @@
+import { useState, useMemo } from 'react';
+import { SlidersHorizontal, X, Heart } from 'lucide-react';
+import { products } from '@/data/products';
+import { useStore } from '@/store/StoreContext';
+import { useReveal } from '@/hooks/useReveal';
+import ProductCard from '@/components/ProductCard';
+import { formatPrice } from '@/lib/format';
+import type { Product, Collection, Size } from '@/types';
+
+interface ShopPageProps {
+  onQuickView: (product: Product) => void;
+  onNavigate: (page: string) => void;
+}
+
+const allCollections: Collection[] = ['Riviera', 'Melek Luxe Round Neck', 'Atelier'];
+const allSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+const allColors = [
+  { name: 'Ivory', hex: '#f0e6d9' },
+  { name: 'Cream', hex: '#f9f4ed' },
+  { name: 'Stone', hex: '#c2ab87' },
+  { name: 'Cocoa', hex: '#6f4a36' },
+  { name: 'Chocolate', hex: '#553828' },
+  { name: 'Espresso', hex: '#3d2820' },
+  { name: 'Black', hex: '#1a1a1a' },
+];
+
+type SortOption = 'featured' | 'price-low' | 'price-high' | 'name';
+
+export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
+  const { wishlist } = useStore();
+  const { ref, visible } = useReveal();
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const [selectedCollections, setSelectedCollections] = useState<Set<Collection>>(new Set());
+  const [selectedSizes, setSelectedSizes] = useState<Set<Size>>(new Set());
+  const [selectedColors, setSelectedColors] = useState<Set<string>>(new Set());
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
+  const [sortBy, setSortBy] = useState<SortOption>('featured');
+  const [showWishlistOnly, setShowWishlistOnly] = useState(false);
+
+  const toggleSet = <T,>(set: Set<T>, value: T, setter: (s: Set<T>) => void) => {
+    const next = new Set(set);
+    if (next.has(value)) next.delete(value);
+    else next.add(value);
+    setter(next);
+  };
+
+  const filtered = useMemo(() => {
+    let result = [...products];
+
+    if (showWishlistOnly) {
+      result = result.filter((p) => wishlist.includes(p.id));
+    }
+    if (selectedCollections.size > 0) {
+      result = result.filter((p) => selectedCollections.has(p.collection));
+    }
+    if (selectedSizes.size > 0) {
+      result = result.filter((p) => p.sizes.some((s) => selectedSizes.has(s)));
+    }
+    if (selectedColors.size > 0) {
+      result = result.filter((p) => p.colors.some((c) => selectedColors.has(c.name)));
+    }
+    result = result.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
+
+    switch (sortBy) {
+      case 'price-low':
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case 'name':
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+    }
+
+    return result;
+  }, [selectedCollections, selectedSizes, selectedColors, priceRange, sortBy, showWishlistOnly, wishlist]);
+
+  const clearFilters = () => {
+    setSelectedCollections(new Set());
+    setSelectedSizes(new Set());
+    setSelectedColors(new Set());
+    setPriceRange([0, 200000]);
+    setShowWishlistOnly(false);
+  };
+
+  const activeFilterCount =
+    selectedCollections.size + selectedSizes.size + selectedColors.size +
+    (priceRange[0] !== 0 || priceRange[1] !== 200000 ? 1 : 0) + (showWishlistOnly ? 1 : 0);
+
+  return (
+    <div className="pt-24 lg:pt-28">
+      {/* Header */}
+      <div className="px-6 lg:px-10 py-12 text-center bg-chocolate-950">
+        <h1 className="font-serif text-4xl md:text-5xl text-ivory-50">The Shop</h1>
+        <p className="text-sm text-ivory-200/60 mt-4">Explore the full MelekWears collection</p>
+      </div>
+
+      <div className="px-6 lg:px-10 py-8 bg-chocolate-950">
+        <div className="mx-auto max-w-[1600px] flex items-center justify-between flex-wrap gap-4">
+          <button
+            onClick={() => setFiltersOpen(!filtersOpen)}
+            className="flex items-center gap-2 text-xs tracking-wider-2 uppercase text-ivory-100 hover:text-gold transition-colors"
+          >
+            <SlidersHorizontal size={16} />
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="bg-gold text-chocolate-950 text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowWishlistOnly(!showWishlistOnly)}
+              className={`flex items-center gap-2 text-xs tracking-wider-2 uppercase transition-colors ${
+                showWishlistOnly ? 'text-gold' : 'text-ivory-100 hover:text-gold'
+              }`}
+            >
+              <Heart size={16} className={showWishlistOnly ? 'fill-gold' : ''} />
+              Wishlist
+            </button>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs tracking-wider-2 uppercase text-ivory-300/50">Sort</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="bg-transparent border border-chocolate-600 text-ivory-100 text-xs px-3 py-2 focus:outline-none focus:border-gold transition-colors cursor-pointer"
+              >
+                <option value="featured" className="bg-chocolate-900">Featured</option>
+                <option value="price-low" className="bg-chocolate-900">Price: Low to High</option>
+                <option value="price-high" className="bg-chocolate-900">Price: High to Low</option>
+                <option value="name" className="bg-chocolate-900">Name: A to Z</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick category links */}
+        <div className="mx-auto max-w-[1600px] flex flex-wrap gap-2 mt-6">
+          {['All Products', ...allCollections].map((cat) => {
+            const isActive = false;
+            return (
+              <button
+                key={cat}
+                onClick={() => {
+                  if (cat === 'All Products') {
+                    clearFilters();
+                  } else if (allCollections.includes(cat as Collection)) {
+                    toggleSet(selectedCollections, cat as Collection, setSelectedCollections);
+                  }
+                }}
+                className={`text-xs tracking-wider uppercase px-4 py-2 border transition-all ${
+                  isActive
+                    ? 'border-gold text-gold'
+                    : 'border-chocolate-600 text-ivory-200/60 hover:border-ivory-300/40 hover:text-ivory-100'
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Filter panel */}
+      {filtersOpen && (
+        <div className="px-6 lg:px-10 py-8 bg-chocolate-900 border-y border-chocolate-800 animate-fade-in">
+          <div className="mx-auto max-w-[1600px] grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Collections */}
+            <div>
+              <h3 className="text-xs tracking-wider-2 uppercase text-gold mb-4">Collections</h3>
+              <div className="space-y-2">
+                {allCollections.map((col) => (
+                  <label key={col} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedCollections.has(col)}
+                      onChange={() => toggleSet(selectedCollections, col, setSelectedCollections)}
+                      className="accent-gold"
+                    />
+                    <span className="text-sm text-ivory-200/80">{col}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Sizes */}
+            <div>
+              <h3 className="text-xs tracking-wider-2 uppercase text-gold mb-4">Sizes</h3>
+              <div className="flex flex-wrap gap-2">
+                {allSizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => toggleSet(selectedSizes, size, setSelectedSizes)}
+                    className={`min-w-[2.5rem] px-3 py-1.5 text-xs tracking-wider uppercase border transition-all ${
+                      selectedSizes.has(size)
+                        ? 'border-gold bg-gold text-chocolate-950'
+                        : 'border-chocolate-600 text-ivory-200/70 hover:border-ivory-300/40'
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Colors & Price */}
+            <div>
+              <h3 className="text-xs tracking-wider-2 uppercase text-gold mb-4">Colors</h3>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {allColors.map((color) => (
+                  <button
+                    key={color.name}
+                    onClick={() => toggleSet(selectedColors, color.name, setSelectedColors)}
+                    className={`w-7 h-7 rounded-full border-2 transition-all ${
+                      selectedColors.has(color.name) ? 'border-gold scale-110' : 'border-chocolate-600'
+                    }`}
+                    style={{ backgroundColor: color.hex }}
+                    title={color.name}
+                  />
+                ))}
+              </div>
+
+              <h3 className="text-xs tracking-wider-2 uppercase text-gold mb-4">Price Range</h3>
+              <div className="space-y-2">
+                <input
+                  type="range"
+                  min={0}
+                  max={200000}
+                  step={5000}
+                  value={priceRange[1]}
+                  onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+                  className="w-full accent-gold"
+                />
+                <div className="flex justify-between text-xs text-ivory-200/60">
+                  <span>{formatPrice(priceRange[0])}</span>
+                  <span>{formatPrice(priceRange[1])}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {activeFilterCount > 0 && (
+            <div className="mx-auto max-w-[1600px] mt-6">
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-2 text-xs tracking-wider-2 uppercase text-ivory-300/60 hover:text-gold transition-colors"
+              >
+                <X size={14} /> Clear all filters
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Products grid */}
+      <div className="px-6 lg:px-10 py-12 bg-chocolate-950">
+        <div ref={ref} className="mx-auto max-w-[1600px]">
+          {filtered.length === 0 ? (
+            <div className="text-center py-24">
+              <p className="font-serif text-xl text-ivory-200/60">No pieces match your selection.</p>
+              <button
+                onClick={clearFilters}
+                className="mt-6 text-xs tracking-wider-2 uppercase text-gold border border-gold/50 px-6 py-3 hover:bg-gold hover:text-chocolate-950 transition-all"
+              >
+                Clear Filters
+              </button>
+            </div>
+          ) : (
+            <>
+              <p className="text-xs text-ivory-300/50 mb-8">{filtered.length} {filtered.length === 1 ? 'piece' : 'pieces'}</p>
+              <div className={`grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 reveal ${visible ? 'is-visible' : ''}`}>
+                {filtered.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onQuickView={onQuickView}
+                    onNavigate={onNavigate}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
