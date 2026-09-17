@@ -22,6 +22,7 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
   const [session, setSession] = useState<{ user: { email: string } } | null>(null);
 
   useEffect(() => {
+    if (!supabase) return;
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) setSession({ user: { email: data.session.user.email ?? '' } });
     });
@@ -33,6 +34,10 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!supabase) {
+      setError('Account services are currently unavailable. Please try again later.');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
@@ -51,6 +56,7 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
   };
 
   const handleSignOut = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
     setSession(null);
   };

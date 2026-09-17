@@ -15,6 +15,10 @@ export default function Footer({ onNavigate }: FooterProps) {
     if (!email) return;
     setStatus('loading');
     try {
+      if (!supabase) {
+        setStatus('error');
+        return;
+      }
       const { error } = await supabase
         .from('newsletter_subscribers')
         .insert({ email });

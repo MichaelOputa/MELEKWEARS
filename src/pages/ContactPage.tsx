@@ -10,6 +10,10 @@ export default function ContactPage() {
     e.preventDefault();
     setStatus('loading');
     try {
+      if (!supabase) {
+        setStatus('error');
+        return;
+      }
       const { error } = await supabase
         .from('contact_messages')
         .insert(form);
