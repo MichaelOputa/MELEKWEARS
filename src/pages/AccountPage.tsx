@@ -18,6 +18,7 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [session, setSession] = useState<{ user: { email: string } } | null>(null);
 
@@ -40,11 +41,16 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
     }
     setLoading(true);
     setError('');
+    setMessage('');
     try {
       if (mode === 'signup') {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) setError(error.message);
-        else setMode('signin');
+        else {
+          setMode('signin');
+          setMessage('Account created. Check your email to confirm your account before signing in.');
+          setPassword('');
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) setError(error.message);
@@ -170,6 +176,7 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
           </div>
 
           {error && <p className="text-sm text-red-400">{error}</p>}
+          {message && <p className="text-sm text-gold">{message}</p>}
 
           <button
             type="submit"
@@ -182,7 +189,7 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
 
         <div className="text-center mt-6">
           <button
-            onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(''); }}
+            onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(''); setMessage(''); }}
             className="text-xs tracking-wider text-ivory-300/60 hover:text-gold transition-colors"
           >
             {mode === 'signin' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}

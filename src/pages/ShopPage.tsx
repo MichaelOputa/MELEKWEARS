@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { SlidersHorizontal, X, Heart } from 'lucide-react';
-import { products } from '@/data/products';
+import { products, heroImage, allGalleryImages } from '@/data/products';
 import { useStore } from '@/store/StoreContext';
 import { useReveal } from '@/hooks/useReveal';
 import ProductCard from '@/components/ProductCard';
@@ -37,6 +37,7 @@ export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [showWishlistOnly, setShowWishlistOnly] = useState(false);
+  const [selectedLookImage, setSelectedLookImage] = useState<string | null>(null);
 
   const toggleSet = <T,>(set: Set<T>, value: T, setter: (s: Set<T>) => void) => {
     const next = new Set(set);
@@ -92,9 +93,15 @@ export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
   return (
     <div className="pt-24 lg:pt-28">
       {/* Header */}
-      <div className="px-6 lg:px-10 py-12 text-center bg-chocolate-950">
-        <h1 className="font-serif text-4xl md:text-5xl text-ivory-50">The Shop</h1>
-        <p className="text-sm text-ivory-200/60 mt-4">Explore the full MelekWears collection</p>
+      <div
+        className="relative px-6 lg:px-10 py-12 text-center bg-chocolate-950 bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroImage})` }}
+      >
+        <div className="absolute inset-0 bg-chocolate-950/70" />
+        <div className="relative">
+          <h1 className="font-serif text-4xl md:text-5xl text-ivory-50">The Shop</h1>
+          <p className="text-sm text-ivory-200/60 mt-4">Explore the full MelekWears collection</p>
+        </div>
       </div>
 
       <div className="px-6 lg:px-10 py-8 bg-chocolate-950">
@@ -287,6 +294,49 @@ export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
           )}
         </div>
       </div>
+      {/* Lookbook */}
+      <div className="px-6 lg:px-10 py-12 bg-chocolate-900 border-t border-chocolate-800">
+        <div className="mx-auto max-w-[1600px]">
+          <div className="flex items-baseline justify-between mb-6">
+            <h2 className="font-serif text-2xl md:text-3xl text-ivory-50">Lookbook</h2>
+            <p className="text-xs text-ivory-300/50">{allGalleryImages.length} images</p>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+            {allGalleryImages.map((src) => (
+              <button
+                key={src}
+                onClick={() => setSelectedLookImage(src)}
+                className={`aspect-square overflow-hidden bg-chocolate-800 border-2 transition-colors ${
+                  selectedLookImage === src ? 'border-gold' : 'border-transparent hover:border-ivory-300/40'
+                }`}
+              >
+                <img src={src} alt="" className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Lookbook lightbox */}
+      {selectedLookImage && (
+        <div
+          className="fixed inset-0 z-50 bg-chocolate-950/90 flex items-center justify-center p-6"
+          onClick={() => setSelectedLookImage(null)}
+        >
+          <button
+            onClick={() => setSelectedLookImage(null)}
+            className="absolute top-6 right-6 text-ivory-100 hover:text-gold transition-colors"
+          >
+            <X size={28} />
+          </button>
+          <img
+            src={selectedLookImage}
+            alt=""
+            className="max-w-full max-h-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }

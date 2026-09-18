@@ -4,8 +4,8 @@ const img = {
   heroModel: '/images/rivieracollection/IMG_0055.JPG',
   brandStatement: '/images/melekessentials/IMG_0131.JPG',
   riviera: '/images/rivieracollection/IMG_0146.JPG',
-  luxe: '/images/melekluxe/IMG_0574.JPG',
-  atelier: '/images/atelier/IMG_1704.JPG',
+  luxe: '/images/melekluxe/IMG_1448.JPG',
+  atelier: '/images/atelier/5A0E9C1B-7118-4A81-B01F-DF43C0E4CF25.PNG',
   aboutNigeria: '/images/melekessentials/IMG_0133.jpg',
   packaging: '/images/melekessentials/IMG_0560.PNG',
   fabric1: '/images/atelier/38B7A0A9-A660-4203-B6AE-CB9551A43B38.jpg',
@@ -71,13 +71,45 @@ const essentialsGallery = [
   '/images/melekessentials/IMG_9879.JPG',
 ];
 
+const melekluxeGallery = [
+    '/images/melekluxe/fliq Media 14.jpg',
+    '/images/melekluxe/FM 1.JPG',
+    '/images/melekluxe/FM 2.JPG',
+    '/images/melekluxe/FM 4.JPG',
+    '/images/melekluxe/IMG_0537.heic',
+    '/images/melekluxe/IMG_0574.JPG',
+    '/images/melekluxe/IMG_0588.JPG',
+    '/images/melekluxe/IMG_0640.JPG',
+    '/images/melekluxe/IMG_0696.heic',
+    '/images/melekluxe/IMG_1173.jpg',
+    '/images/melekluxe/IMG_1305.jpg',
+    '/images/melekluxe/IMG_1308.jpg',
+];
+
+const rivieracollectionGallery = [
+  '/images/rivieracollection/4E922519-1B74-40F6-9214-3E489E32947E.PNG',
+  '/images/rivieracollection/5BFFE213-6DF7-443F-BA95-496F1F05BAD1.PNG',
+  '/images/rivieracollection/C7C5E311-E4EF-496B-A637-20C3A0494B28.PNG',
+  '/images/rivieracollection/IMG_0414.heic',
+  '/images/rivieracollection/IMG_0433.heic',
+  '/images/rivieracollection/IMG_0055.JPG',
+  '/images/rivieracollection/IMG_0146.JPG',
+  '/images/rivieracollection/IMG_0312.JPG',
+  '/images/rivieracollection/IMG_2164.JPG',
+  '/images/rivieracollection/IMG_6337.JPG',
+  '/images/rivieracollection/IMG_6368.JPG',
+  '/images/rivieracollection/IMG_6628.JPG',
+  '/images/rivieracollection/IMG_6634.jpg',
+  '/images/rivieracollection/IMG_7492.JPG',
+];
+
 export const heroImage = img.heroModel;
 export const brandStatementImage = essentialsGallery[0];
 export const aboutImage = essentialsGallery[1];
 export const packagingImage = essentialsGallery[2];
 export const collectionImages = {
-  Riviera: img.riviera,
-  'Melek Luxe Round Neck': img.luxe,
+  Riviera: '/images/rivieracollection/4E922519-1B74-40F6-9214-3E489E32947E.PNG',
+  'Melek Luxe Round Neck': img.product3,
   Atelier: img.atelier,
 };
 export const craftsmanshipImages = {
@@ -86,6 +118,11 @@ export const craftsmanshipImages = {
   construction: img.atelierWork2,
   texture: img.fabric1,
 };
+export { atelierGallery, essentialsGallery, melekluxeGallery, rivieracollectionGallery };
+
+export const allGalleryImages = Array.from(
+  new Set([...atelierGallery, ...essentialsGallery, ...melekluxeGallery, ...rivieracollectionGallery])
+);
 
 export const products: Product[] = [
   {
@@ -135,7 +172,15 @@ export const products: Product[] = [
       { name: 'Espresso', hex: '#3d2820' },
     ],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    images: atelierGallery,
+    images: [
+      '/images/atelier/154AF174-168C-47A0-BDB9-A033B5F44DA0.PNG',
+      '/images/atelier/38B7A0A9-A660-4203-B6AE-CB9551A43B38.jpg',
+      '/images/atelier/5506B975-8884-4373-8FB5-07096C67EEFE.PNG',
+      '/images/atelier/5A0E9C1B-7118-4A81-B01F-DF43C0E4CF25.PNG',
+      '/images/atelier/BD033733-A617-4B67-B203-EE22940D9F47.PNG',
+      '/images/atelier/FFC65607-0AAA-4124-8BA1-63FD467DCE16.PNG',
+      '/images/atelier/IMG_1704.JPG',
+    ],
     signatureLabel: 'Waffle-Knit Long-Sleeve Polos',
     signatureDescription: 'Structured, tactile long-sleeve pieces crafted for texture and comfort.',
   },
@@ -185,7 +230,15 @@ export const products: Product[] = [
       { name: 'Stone', hex: '#c2ab87' },
     ],
     sizes: ['M', 'L', 'XL', 'XXL'],
-    images: atelierGallery,
+    images: [
+      '/images/atelier/IMG_1753.JPG',
+      '/images/atelier/IMG_1765.JPG',
+      '/images/atelier/IMG_1775.JPG',
+      '/images/atelier/IMG_1782.JPG',
+      '/images/atelier/IMG_1850.JPG',
+      '/images/atelier/IMG_1856.JPG',
+      '/images/atelier/IMG_2134.jpg',
+    ],
     signatureLabel: 'Waffle-Knit Long-Sleeve Polos',
     signatureDescription: 'Structured, tactile long-sleeve pieces crafted for texture and comfort.',
   },
@@ -220,6 +273,99 @@ export const products: Product[] = [
     images: [img.product2, img.product1, img.riviera],
     signatureLabel: 'Open-Collar Johnny Polos',
     signatureDescription: 'Placket-less, buttonless collars designed for casual elegance.',
+  },
+  {
+    id: 'riviera-open-collar-polo-sand',
+    name: 'Riviera Open-Collar Polo — Sand',
+    collection: 'Riviera',
+    category: 'Polos',
+    price: 88000,
+    description: 'A textured, seersucker-effect open-collar polo in warm sand, finished with a contrast black collar and ribbed black-and-white tipping at the cuffs and hem.',
+    colors: [
+      { name: 'Sand', hex: '#c8b28a' },
+      { name: 'Black', hex: '#1a1a1a' },
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    images: [
+      '/images/rivieracollection/4E922519-1B74-40F6-9214-3E489E32947E.PNG',
+      '/images/rivieracollection/IMG_0414.heic',
+      '/images/rivieracollection/IMG_0433.heic',
+    ],
+    signatureLabel: 'Open-Collar Johnny Polos',
+    signatureDescription: 'Placket-less, buttonless collars designed for casual elegance.',
+  },
+  {
+    id: 'riviera-open-collar-polo-navy',
+    name: 'Riviera Open-Collar Polo — Navy',
+    collection: 'Riviera',
+    category: 'Polos',
+    price: 88000,
+    description: 'A deep navy open-collar polo in a fine ribbed knit, with a black collar and clean black-and-white tipping — a sharper, evening-ready take on the signature Johnny polo.',
+    colors: [
+      { name: 'Navy', hex: '#1b2a4a' },
+      { name: 'Black', hex: '#1a1a1a' },
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    images: ['/images/rivieracollection/5BFFE213-6DF7-443F-BA95-496F1F05BAD1.PNG'],
+    signatureLabel: 'Open-Collar Johnny Polos',
+    signatureDescription: 'Placket-less, buttonless collars designed for casual elegance.',
+  },
+  {
+    id: 'riviera-heritage-stripe-polo',
+    name: 'Riviera Heritage Stripe Polo',
+    collection: 'Riviera',
+    category: 'Polos',
+    price: 90000,
+    description: 'A bold rust-and-navy striped polo with fine white pinstripes and a black collar, bringing a heritage sportswear edge to the Riviera line.',
+    colors: [
+      { name: 'Rust', hex: '#8a3f2a' },
+      { name: 'Navy', hex: '#1b2a4a' },
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    images: ['/images/rivieracollection/C7C5E311-E4EF-496B-A637-20C3A0494B28.PNG'],
+    signatureLabel: 'Open-Collar Johnny Polos',
+    signatureDescription: 'Placket-less, buttonless collars designed for casual elegance.',
+  },
+  {
+    id: 'luxe-textured-knit-polo',
+    name: 'Luxe Textured Knit Polo',
+    collection: 'Melek Luxe Round Neck',
+    category: 'Polos',
+    price: 78000,
+    description: 'A tweed-effect textured knit polo with a black collar and ribbed cuffs, striking a balance between the line\'s minimalist ethos and a more tactile, patterned finish.',
+    colors: [{ name: 'Tweed Multi', hex: '#8a7d6a' }],
+    sizes: ['S', 'M', 'L', 'XL'],
+    images: [
+      '/images/melekluxe/fliq Media 14.jpg',
+      '/images/melekluxe/FM 1.JPG',
+      '/images/melekluxe/FM 2.JPG',
+      '/images/melekluxe/FM 4.JPG',
+    ],
+    signatureLabel: 'Textured Knit Polos',
+    signatureDescription: 'A patterned, tactile counterpoint to the line\'s minimalist round-neck staples.',
+  },
+  {
+    id: 'luxe-oversized-tee',
+    name: 'Luxe Oversized Tee',
+    collection: 'Melek Luxe Round Neck',
+    category: 'Tops',
+    price: 45000,
+    description: 'A heavyweight, boxy-fit crew-neck tee finished with a subtle embroidered logo — the everyday essential beneath the Luxe line\'s more elevated pieces.',
+    colors: [
+      { name: 'Ivory', hex: '#f0e6d9' },
+      { name: 'Black', hex: '#1a1a1a' },
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    images: [
+      '/images/melekluxe/IMG_0537.heic',
+      '/images/melekluxe/IMG_0640.JPG',
+      '/images/melekluxe/IMG_0696.heic',
+      '/images/melekluxe/IMG_1173.jpg',
+      '/images/melekluxe/IMG_1305.jpg',
+      '/images/melekluxe/IMG_1308.jpg',
+    ],
+    signatureLabel: 'Oversized Essential Tees',
+    signatureDescription: 'Heavyweight, relaxed-fit tees finished with a subtle embroidered logo.',
   },
 ];
 
