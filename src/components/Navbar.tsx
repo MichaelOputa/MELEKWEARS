@@ -57,9 +57,13 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
             aria-label="MelekWears Home"
           >
             <img
-              src="/images/Melek.JPG"
+              src="/images/Melek.png"
               alt="MELEK"
-              className="h-10 w-auto lg:h-12 object-contain"
+              className={`w-auto object-contain transition-all duration-500 ${
+                scrolled
+                  ? 'h-10 lg:h-12'
+                  : 'h-12 lg:h-14 drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]'
+              }`}
             />
           </button>
 

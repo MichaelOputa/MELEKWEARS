@@ -101,7 +101,7 @@ export default function Footer({ onNavigate }: FooterProps) {
         <div className="mx-auto max-w-[1600px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <img src="/images/Melek.JPG" alt="MELEK" className="h-14 w-auto object-contain" />
+            <img src="/images/Melek.png" alt="MELEK" className="h-24 w-auto object-contain" />
             <p className="font-serif text-lg text-ivory-200/80 mt-4 italic">
               Crafted with Precision. Designed for Distinction.
             </p>
