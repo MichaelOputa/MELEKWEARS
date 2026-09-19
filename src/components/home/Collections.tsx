@@ -1,6 +1,7 @@
 import { collectionImages } from '@/data/products';
 import { useReveal } from '@/hooks/useReveal';
 import type { Collection } from '@/types';
+import Img from '@/components/Img';
 
 interface CollectionsProps {
   onNavigate: (page: string, collection?: Collection) => void;
@@ -19,10 +20,10 @@ const collections: {
     image: collectionImages.Riviera,
   },
   {
-    name: 'Melek Luxe Round Neck',
+    name: 'Melek Luxe Collections',
     description: 'Elevated premium essentials designed for effortless everyday luxury.',
     cta: 'Explore Luxe',
-    image: collectionImages['Melek Luxe Round Neck'],
+    image: collectionImages['Melek Luxe Collections'],
   },
   {
     name: 'Atelier',
@@ -51,7 +52,8 @@ export default function Collections({ onNavigate }: CollectionsProps) {
               style={{ transitionDelay: `${i * 0.15}s` }}
               onClick={() => onNavigate('shop', col.name)}
             >
-              <img
+              <Img
+                thumb
                 src={col.image}
                 alt={col.name}
                 className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"

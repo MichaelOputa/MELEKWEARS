@@ -3,6 +3,7 @@ import { X, Heart, ShoppingBag, Minus, Plus } from 'lucide-react';
 import type { Product, Size } from '@/types';
 import { useStore } from '@/store/StoreContext';
 import Price from '@/components/Price';
+import Img from '@/components/Img';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -50,7 +51,8 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
         {/* Gallery */}
         <div className="flex flex-col">
           <div className="aspect-[3/4] bg-chocolate-800 overflow-hidden">
-            <img
+            <Img
+              priority
               src={product.images[activeImage]}
               alt={product.name}
               className="w-full h-full object-cover"
@@ -65,7 +67,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                   activeImage === i ? 'border-gold' : 'border-transparent'
                 }`}
               >
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <Img thumb src={img} alt="" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>

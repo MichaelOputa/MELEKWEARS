@@ -1,4 +1,4 @@
-export type Collection = 'Riviera' | 'Melek Luxe Round Neck' | 'Atelier';
+export type Collection = 'Riviera' | 'Melek Luxe Collections' | 'Atelier';
 export type ProductCategory = 'Polos' | 'Tops' | 'Sets' | 'Shorts';
 export type Size = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
 

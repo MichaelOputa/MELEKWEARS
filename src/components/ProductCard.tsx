@@ -2,6 +2,7 @@ import { Heart, Eye, ShoppingBag } from 'lucide-react';
 import type { Product } from '@/types';
 import { useStore } from '@/store/StoreContext';
 import Price from '@/components/Price';
+import Img from '@/components/Img';
 
 interface ProductCardProps {
   product: Product;
@@ -16,14 +17,17 @@ export default function ProductCard({ product, onQuickView, onNavigate }: Produc
   return (
     <div className="group flex flex-col">
       <div className="relative overflow-hidden bg-chocolate-800 aspect-[3/4]">
-        <img
+        <Img
+          thumb
           src={product.images[0]}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
         />
         {/* Hover image */}
         {product.images[1] && (
-          <img
+          <Img
+            thumb
+            fade={false}
             src={product.images[1]}
             alt={product.name}
             className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700"

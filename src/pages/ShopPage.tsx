@@ -6,6 +6,7 @@ import { useReveal } from '@/hooks/useReveal';
 import ProductCard from '@/components/ProductCard';
 import { formatPrice } from '@/lib/format';
 import type { Product, Collection, Size } from '@/types';
+import Img from '@/components/Img';
 
 interface ShopPageProps {
   /** Collection to open on (e.g. from a footer or collection-card link). Omit or null for all. */
@@ -14,7 +15,7 @@ interface ShopPageProps {
   onNavigate: (page: string, collection?: Collection) => void;
 }
 
-const allCollections: Collection[] = ['Riviera', 'Melek Luxe Round Neck', 'Atelier'];
+const allCollections: Collection[] = ['Riviera', 'Melek Luxe Collections', 'Atelier'];
 const allSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const allColors = [
   { name: 'Ivory', hex: '#f0e6d9' },
@@ -349,7 +350,7 @@ export default function ShopPage({ initialCollection = null, onQuickView, onNavi
                   selectedLookImage === src ? 'border-gold' : 'border-transparent hover:border-ivory-300/40'
                 }`}
               >
-                <img src={src} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                <Img thumb src={src} alt="" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
@@ -375,7 +376,8 @@ export default function ShopPage({ initialCollection = null, onQuickView, onNavi
           >
             <ChevronLeft size={36} />
           </button>
-          <img
+          <Img
+            priority
             src={selectedLookImage}
             alt=""
             className="max-w-full max-h-full object-contain"

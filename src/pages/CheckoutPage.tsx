@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronLeft, CreditCard, Truck, Check } from 'lucide-react';
 import { useStore } from '@/store/StoreContext';
 import Price from '@/components/Price';
+import Img from '@/components/Img';
 
 interface CheckoutPageProps {
   onNavigate: (page: string) => void;
@@ -190,7 +191,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             <div className="space-y-4 max-h-64 overflow-y-auto">
               {cart.map((item, i) => (
                 <div key={i} className="flex gap-3">
-                  <img src={item.product.images[0]} alt="" className="w-14 h-18 object-cover bg-chocolate-800 flex-shrink-0" />
+                  <Img thumb src={item.product.images[0]} alt="" className="w-14 h-18 object-cover bg-chocolate-800 flex-shrink-0" />
                   <div className="flex-1">
                     <p className="text-xs text-ivory-100">{item.product.name}</p>
                     <p className="text-[10px] text-ivory-300/50">{item.color} · {item.size} · Qty {item.quantity}</p>

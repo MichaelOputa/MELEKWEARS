@@ -5,6 +5,7 @@ import { useStore } from '@/store/StoreContext';
 import { products } from '@/data/products';
 import Price from '@/components/Price';
 import type { Product } from '@/types';
+import Img from '@/components/Img';
 
 interface AccountPageProps {
   onNavigate: (page: string) => void;
@@ -100,7 +101,7 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
                   <div className="space-y-4">
                     {wishlistProducts.map((p) => (
                       <div key={p.id} className="flex gap-4">
-                        <img src={p.images[0]} alt="" className="w-16 h-20 object-cover bg-chocolate-800" />
+                        <Img thumb src={p.images[0]} alt="" className="w-16 h-20 object-cover bg-chocolate-800" />
                         <div>
                           <button onClick={() => onQuickView(p)} className="font-serif text-sm text-ivory-50 hover:text-gold transition-colors text-left">
                             {p.name}

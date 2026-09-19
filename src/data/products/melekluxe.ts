@@ -1,7 +1,7 @@
 import type { Product } from '@/types';
 
 /**
- * MELEK LUXE  (collection value: 'Melek Luxe Round Neck')
+ * MELEK LUXE  (collection value: 'Melek Luxe Collections')
  * Image folder: /public/images/melekluxe
  *
  * Adding to this lineup:
@@ -12,7 +12,7 @@ import type { Product } from '@/types';
 
 // ─── Images ──────────────────────────────────────────────────────────────
 
-/** Cover shown on the Melek Luxe collection card (collectionImages['Melek Luxe Round Neck']). */
+/** Cover shown on the Melek Luxe collection card (collectionImages['Melek Luxe Collections']). */
 export const melekluxeCoverImage = '/images/melekluxe/IMG_0574.JPG';
 
 /** Local shortcuts for shots reused across this lineup's products. */
@@ -45,7 +45,7 @@ export const melekluxeProducts: Product[] = [
   {
     id: 'luxe-round-neck-cream',
     name: 'Melek Luxe Round-Neck Tee',
-    collection: 'Melek Luxe Round Neck',
+    collection: 'Melek Luxe Collections',
     category: 'Tops',
     price: 50000,
     description: 'A minimalist, high-fit crew neck made for refined everyday dressing. Crafted from premium slub knit for a subtle texture that elevates the simplest silhouette.',
@@ -62,7 +62,7 @@ export const melekluxeProducts: Product[] = [
   {
     id: 'melek-round-neck-two-piece-set',
     name: 'Melek Round-Neck Two-Piece Set',
-    collection: 'Melek Luxe Round Neck',
+    collection: 'Melek Luxe Collections',
     category: 'Sets',
     price: 80000,
     description: 'The Melek Luxe round-neck tee with its matching bottom, cut as one coordinated up-and-down set in the same premium slub knit.',
@@ -79,7 +79,7 @@ export const melekluxeProducts: Product[] = [
   {
     id: 'melek-short-nicker',
     name: 'Melek Short Nicker',
-    collection: 'Melek Luxe Round Neck',
+    collection: 'Melek Luxe Collections',
     category: 'Shorts',
     price: 20000,
     description: 'A relaxed short nicker in the Melek Luxe knit — the easy, everyday bottom to wear with any Melek tee or shirt.',

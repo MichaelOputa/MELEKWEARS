@@ -7,7 +7,7 @@ const milestones = [
   },
   {
     title: 'Signature Releases',
-    description: 'Successfully launched the Riviera, Luxe Round Neck, and Atelier lines.',
+    description: 'Successfully launched the Riviera, Melek Luxe, and Atelier lines.',
   },
   {
     title: 'Textile Excellence',

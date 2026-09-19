@@ -16,7 +16,7 @@ import fs from 'node:fs';
  */
 const COLLECTION_FOLDERS: Record<string, string> = {
   Atelier: 'atelier',
-  'Melek Luxe Round Neck': 'melekluxe',
+  'Melek Luxe Collections': 'melekluxe',
   Riviera: 'rivieracollection',
 };
 const WEB_IMAGE = /\.(jpe?g|png|webp|gif|avif)$/i;

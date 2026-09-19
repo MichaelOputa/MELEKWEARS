@@ -38,7 +38,7 @@ export const products: Product[] = [
 
 export const collectionImages = {
   Atelier: atelierCoverImage,
-  'Melek Luxe Round Neck': melekluxeCoverImage,
+  'Melek Luxe Collections': melekluxeCoverImage,
   Riviera: rivieraCoverImage,
 };
 
@@ -54,7 +54,15 @@ export const allGalleryImages = Array.from(
  */
 export function getCollectionImages(collections: Collection[] = []): string[] {
   const names = (collections.length ? collections : Object.keys(collectionFolderImages)) as Collection[];
-  return names.flatMap((name) => collectionFolderImages[name] ?? []);
+  return names.flatMap((name) => {
+    if (import.meta.env.DEV && !collectionFolderImages[name]) {
+      console.warn(
+        `[Shop] No image folder found for collection "${name}". ` +
+          'Make sure vite.config.ts (COLLECTION_FOLDERS) uses the same collection names as src/types.ts, then restart the dev server.'
+      );
+    }
+    return collectionFolderImages[name] ?? [];
+  });
 }
 
 // ─── Re-exports (unchanged public API) ───────────────────────────────────

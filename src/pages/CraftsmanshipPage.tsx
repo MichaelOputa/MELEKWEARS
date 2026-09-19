@@ -1,5 +1,6 @@
 import { craftsmanshipImages } from '@/data/products';
 import { useReveal } from '@/hooks/useReveal';
+import Img from '@/components/Img';
 
 /**
  * The four detail photos are portrait shots, so they sit in 3:4 portrait frames
@@ -54,11 +55,10 @@ export default function CraftsmanshipPage() {
               style={{ transitionDelay: `${i * 0.12}s` }}
             >
               <div className="aspect-[3/4] overflow-hidden bg-chocolate-800 mb-6">
-                <img
+                <Img
+                  thumb
                   src={feature.image}
                   alt={feature.title}
-                  loading="lazy"
-                  decoding="async"
                   className="w-full h-full object-cover"
                   style={{ objectPosition: feature.focus }}
                 />

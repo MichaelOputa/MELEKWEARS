@@ -1,5 +1,6 @@
 import { craftsmanshipImages } from '@/data/products';
 import { useReveal } from '@/hooks/useReveal';
+import Img from '@/components/Img';
 
 const features = [
   {
@@ -46,7 +47,8 @@ export default function Craftsmanship() {
               style={{ transitionDelay: `${i * 0.12}s` }}
             >
               <div className="aspect-[4/5] overflow-hidden bg-chocolate-800 mb-5">
-                <img
+                <Img
+                  thumb
                   src={feature.image}
                   alt={feature.title}
                   className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"

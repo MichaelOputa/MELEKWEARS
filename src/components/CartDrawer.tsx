@@ -1,6 +1,7 @@
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
 import { useStore } from '@/store/StoreContext';
 import Price from '@/components/Price';
+import Img from '@/components/Img';
 
 interface CartDrawerProps {
   onNavigate: (page: string) => void;
@@ -58,7 +59,8 @@ export default function CartDrawer({ onNavigate, onCheckout }: CartDrawerProps) 
                   key={`${item.product.id}-${item.size}-${item.color}`}
                   className="flex gap-4 py-5 border-b border-chocolate-700/50"
                 >
-                  <img
+                  <Img
+                    thumb
                     src={item.product.images[0]}
                     alt={item.product.name}
                     className="w-20 h-28 object-cover bg-chocolate-800"

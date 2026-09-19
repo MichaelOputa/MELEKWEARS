@@ -3,6 +3,7 @@ import { X, Search } from 'lucide-react';
 import { useStore } from '@/store/StoreContext';
 import { products } from '@/data/products';
 import Price from '@/components/Price';
+import Img from '@/components/Img';
 
 interface SearchOverlayProps {
   onNavigate: (page: string) => void;
@@ -72,7 +73,8 @@ export default function SearchOverlay({ onNavigate, onProductSelect }: SearchOve
                 }}
                 className="flex items-center gap-4 w-full text-left group hover:bg-chocolate-800/50 p-2 transition-colors"
               >
-                <img
+                <Img
+                  thumb
                   src={product.images[0]}
                   alt={product.name}
                   className="w-16 h-20 object-cover bg-chocolate-800"

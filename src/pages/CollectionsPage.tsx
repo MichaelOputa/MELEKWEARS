@@ -1,6 +1,7 @@
 import { collectionImages } from '@/data/products';
 import { useReveal } from '@/hooks/useReveal';
 import type { Collection } from '@/types';
+import Img from '@/components/Img';
 
 interface CollectionsPageProps {
   onNavigate: (page: string, collection?: Collection) => void;
@@ -21,11 +22,11 @@ const collections: {
     longDescription: 'The Riviera line embodies the spirit of resort leisure — short-sleeve, open-collar Melek polos cut from breathable cotton with contrast ribbed tipping. Each shirt is designed for casual elegance and styled with the trousers of your choice.',
   },
   {
-    name: 'Melek Luxe Round Neck',
+    name: 'Melek Luxe Collections',
     description: 'Elevated premium essentials designed for effortless everyday luxury.',
     cta: 'Explore Luxe',
-    image: collectionImages['Melek Luxe Round Neck'],
-    longDescription: 'The Melek Luxe Round Neck collection is built on minimalist, high-fit crew necks in premium slub knit. These are the wardrobe essentials — the round-neck tee, its matching two-piece set, and the short nicker — refined, versatile, and designed for effortless everyday dressing.',
+    image: collectionImages['Melek Luxe Collections'],
+    longDescription: 'The Melek Luxe Collections are built on minimalist, high-fit crew necks in premium slub knit. These are the wardrobe essentials — the round-neck tee, its matching two-piece set, and the short nicker — refined, versatile, and designed for effortless everyday dressing.',
   },
   {
     name: 'Atelier',
@@ -55,7 +56,7 @@ export default function CollectionsPage({ onNavigate }: CollectionsPageProps) {
             <div className={`mx-auto max-w-[1400px] grid lg:grid-cols-2 gap-12 lg:gap-20 items-center ${i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
               <div className={`reveal ${visible ? 'is-visible' : ''}`}>
                 <div className="aspect-[4/5] overflow-hidden bg-chocolate-800">
-                  <img src={col.image} alt={col.name} className="w-full h-full object-cover" />
+                  <Img src={col.image} alt={col.name} className="w-full h-full object-cover" />
                 </div>
               </div>
               <div className={`reveal ${visible ? 'is-visible' : ''} reveal-delay-2`}>

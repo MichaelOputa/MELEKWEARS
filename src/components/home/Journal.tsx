@@ -1,5 +1,6 @@
 import { journalArticles } from '@/data/products';
 import { useReveal } from '@/hooks/useReveal';
+import Img from '@/components/Img';
 
 interface JournalProps {
   onNavigate: (page: string) => void;
@@ -40,7 +41,8 @@ export default function Journal({ onNavigate }: JournalProps) {
               onClick={() => onNavigate('journal')}
             >
               <div className="aspect-[3/4] overflow-hidden bg-chocolate-800 mb-5">
-                <img
+                <Img
+                  thumb
                   src={article.image}
                   alt={article.title}
                   className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"

@@ -1,5 +1,6 @@
 import { packagingImage } from '@/data/products';
 import { useReveal } from '@/hooks/useReveal';
+import Img from '@/components/Img';
 
 export default function Packaging() {
   const { ref, visible } = useReveal();
@@ -9,7 +10,7 @@ export default function Packaging() {
       <div ref={ref} className="mx-auto max-w-[1600px] grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         <div className={`reveal ${visible ? 'is-visible' : ''}`}>
           <div className="aspect-[16/10] overflow-hidden bg-chocolate-800">
-            <img
+            <Img
               src={packagingImage}
               alt="MelekWears packaging and unboxing experience"
               className="w-full h-full object-cover"

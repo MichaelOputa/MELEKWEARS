@@ -1,5 +1,6 @@
 import { useStore } from '@/store/StoreContext';
 import { heroImage } from '@/data/products';
+import Img from '@/components/Img';
 
 interface HeroProps {
   onNavigate: (page: string) => void;
@@ -12,7 +13,9 @@ export default function Hero({ onNavigate }: HeroProps) {
     <section className="relative h-screen min-h-[700px] overflow-hidden">
       {/* Background image with slow zoom */}
       <div className="absolute inset-0 overflow-hidden">
-        <img
+        <Img
+          priority
+          fade={false}
           src={heroImage}
           alt="MelekWears model in resort-inspired luxury clothing"
           className="w-full h-full object-cover animate-slow-zoom"

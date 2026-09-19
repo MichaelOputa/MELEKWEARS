@@ -1,5 +1,6 @@
 import { brandStatementImage } from '@/data/products';
 import { useReveal } from '@/hooks/useReveal';
+import Img from '@/components/Img';
 
 export default function BrandStatement() {
   const { ref, visible } = useReveal();
@@ -9,7 +10,7 @@ export default function BrandStatement() {
       <div ref={ref} className="mx-auto max-w-[1400px] grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         <div className={`reveal ${visible ? 'is-visible' : ''}`}>
           <div className="aspect-[4/5] overflow-hidden bg-chocolate-800">
-            <img
+            <Img
               src={brandStatementImage}
               alt="MelekWears editorial"
               className="w-full h-full object-cover"

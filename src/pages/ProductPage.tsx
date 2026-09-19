@@ -5,6 +5,7 @@ import { useStore } from '@/store/StoreContext';
 import Price from '@/components/Price';
 import ProductCard from '@/components/ProductCard';
 import type { Product, Size } from '@/types';
+import Img from '@/components/Img';
 
 interface ProductPageProps {
   product: Product;
@@ -77,12 +78,13 @@ export default function ProductPage({ product, onNavigate, onQuickView }: Produc
                     activeImage === i ? 'border-gold' : 'border-transparent'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <Img thumb src={img} alt="" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
             <div className="flex-1 aspect-[3/4] bg-chocolate-800 overflow-hidden">
-              <img
+              <Img
+                priority
                 src={product.images[activeImage]}
                 alt={product.name}
                 className="w-full h-full object-cover"

@@ -40,14 +40,14 @@ export default function Footer({ onNavigate }: FooterProps) {
   };
 
   const footerLinks = {
-    Shop: ['Shop All', 'Riviera', 'Luxe Round Neck', 'Atelier', 'Polos', 'Tops', 'Sets'],
+    Shop: ['Shop All', 'Riviera', 'Melek Luxe Collections', 'Atelier', 'Polos', 'Tops', 'Sets'],
     Brand: ['About', 'Collections', 'Craftsmanship', 'Journal', 'Contact'],
     Support: ['Shipping & Returns', 'Privacy Policy', 'Terms & Conditions'],
   };
 
   const collectionForLink: Record<string, Collection> = {
     Riviera: 'Riviera',
-    'Luxe Round Neck': 'Melek Luxe Round Neck',
+    'Melek Luxe Collections': 'Melek Luxe Collections',
     Atelier: 'Atelier',
   };
 
@@ -55,7 +55,7 @@ export default function Footer({ onNavigate }: FooterProps) {
     const map: Record<string, string> = {
       'Shop All': 'shop',
       Riviera: 'shop',
-      'Luxe Round Neck': 'shop',
+      'Melek Luxe Collections': 'shop',
       Atelier: 'shop',
       Polos: 'shop',
       Tops: 'shop',
