@@ -3,7 +3,7 @@ import { useReveal } from '@/hooks/useReveal';
 import type { Collection } from '@/types';
 
 interface CollectionsPageProps {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: string, collection?: Collection) => void;
 }
 
 const collections: {
@@ -18,21 +18,21 @@ const collections: {
     description: 'Resort-inspired tailored leisurewear featuring open-collar silhouettes.',
     cta: 'Explore Riviera',
     image: collectionImages.Riviera,
-    longDescription: 'The Riviera line embodies the spirit of resort leisure — open-collar Johnny polos, relaxed lounge trousers, and coordinated two-piece sets. Cut from breathable cotton with contrast ribbed tipping, each piece is designed for casual elegance.',
+    longDescription: 'The Riviera line embodies the spirit of resort leisure — short-sleeve, open-collar Melek polos cut from breathable cotton with contrast ribbed tipping. Each shirt is designed for casual elegance and styled with the trousers of your choice.',
   },
   {
     name: 'Melek Luxe Round Neck',
     description: 'Elevated premium essentials designed for effortless everyday luxury.',
     cta: 'Explore Luxe',
     image: collectionImages['Melek Luxe Round Neck'],
-    longDescription: 'The Luxe Round Neck collection is built on minimalist, high-fit crew necks in premium slub knit. These are the wardrobe essentials — refined, versatile, and designed for effortless everyday dressing.',
+    longDescription: 'The Melek Luxe Round Neck collection is built on minimalist, high-fit crew necks in premium slub knit. These are the wardrobe essentials — the round-neck tee, its matching two-piece set, and the short nicker — refined, versatile, and designed for effortless everyday dressing.',
   },
   {
     name: 'Atelier',
     description: 'Structured drops defined by refined tailoring and specialized fabric blends.',
     cta: 'Explore Atelier',
     image: collectionImages.Atelier,
-    longDescription: 'The Atelier line represents our most structured work — heavy-gauge textured knits, waffle weaves, and tailored resort fits. Each drop is a study in precision construction and tactile fabric.',
+    longDescription: 'The Atelier line represents our most structured work — heavy-gauge textured knits, waffle weaves, and tailored resort fits, from the long-sleeve collared shirt to the matching two-piece set. Each drop is a study in precision construction and tactile fabric.',
   },
 ];
 
@@ -65,7 +65,7 @@ export default function CollectionsPage({ onNavigate }: CollectionsPageProps) {
                 <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-ivory-50">{col.name}</h2>
                 <p className="text-sm text-ivory-200/80 leading-relaxed mt-6">{col.longDescription}</p>
                 <button
-                  onClick={() => onNavigate('shop')}
+                  onClick={() => onNavigate('shop', col.name)}
                   className="mt-8 text-xs tracking-wider-2 uppercase text-gold border border-gold/50 px-8 py-4 hover:bg-gold hover:text-chocolate-950 transition-all duration-300"
                 >
                   {col.cta}

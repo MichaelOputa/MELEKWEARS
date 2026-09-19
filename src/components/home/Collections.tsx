@@ -3,7 +3,7 @@ import { useReveal } from '@/hooks/useReveal';
 import type { Collection } from '@/types';
 
 interface CollectionsProps {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: string, collection?: Collection) => void;
 }
 
 const collections: {
@@ -49,7 +49,7 @@ export default function Collections({ onNavigate }: CollectionsProps) {
               key={col.name}
               className={`group relative overflow-hidden aspect-[3/4] cursor-pointer reveal ${visible ? 'is-visible' : ''}`}
               style={{ transitionDelay: `${i * 0.15}s` }}
-              onClick={() => onNavigate('shop')}
+              onClick={() => onNavigate('shop', col.name)}
             >
               <img
                 src={col.image}

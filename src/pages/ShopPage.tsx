@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
-import { SlidersHorizontal, X, Heart } from 'lucide-react';
-import { products, heroImage, allGalleryImages } from '@/data/products';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { SlidersHorizontal, X, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
+import { products, heroImage, getCollectionImages } from '@/data/products';
 import { useStore } from '@/store/StoreContext';
 import { useReveal } from '@/hooks/useReveal';
 import ProductCard from '@/components/ProductCard';
@@ -8,8 +8,10 @@ import { formatPrice } from '@/lib/format';
 import type { Product, Collection, Size } from '@/types';
 
 interface ShopPageProps {
+  /** Collection to open on (e.g. from a footer or collection-card link). Omit or null for all. */
+  initialCollection?: Collection | null;
   onQuickView: (product: Product) => void;
-  onNavigate: (page: string) => void;
+  onNavigate: (page: string, collection?: Collection) => void;
 }
 
 const allCollections: Collection[] = ['Riviera', 'Melek Luxe Round Neck', 'Atelier'];
@@ -24,17 +26,21 @@ const allColors = [
   { name: 'Black', hex: '#1a1a1a' },
 ];
 
+const MAX_PRICE = 100000;
+
 type SortOption = 'featured' | 'price-low' | 'price-high' | 'name';
 
-export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
+export default function ShopPage({ initialCollection = null, onQuickView, onNavigate }: ShopPageProps) {
   const { wishlist } = useStore();
   const { ref, visible } = useReveal();
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const [selectedCollections, setSelectedCollections] = useState<Set<Collection>>(new Set());
+  const [selectedCollections, setSelectedCollections] = useState<Set<Collection>>(
+    new Set(initialCollection ? [initialCollection] : [])
+  );
   const [selectedSizes, setSelectedSizes] = useState<Set<Size>>(new Set());
   const [selectedColors, setSelectedColors] = useState<Set<string>>(new Set());
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE]);
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [showWishlistOnly, setShowWishlistOnly] = useState(false);
   const [selectedLookImage, setSelectedLookImage] = useState<string | null>(null);
@@ -82,13 +88,42 @@ export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
     setSelectedCollections(new Set());
     setSelectedSizes(new Set());
     setSelectedColors(new Set());
-    setPriceRange([0, 200000]);
+    setPriceRange([0, MAX_PRICE]);
     setShowWishlistOnly(false);
   };
 
   const activeFilterCount =
     selectedCollections.size + selectedSizes.size + selectedColors.size +
-    (priceRange[0] !== 0 || priceRange[1] !== 200000 ? 1 : 0) + (showWishlistOnly ? 1 : 0);
+    (priceRange[0] !== 0 || priceRange[1] !== MAX_PRICE ? 1 : 0) + (showWishlistOnly ? 1 : 0);
+
+  // Lookbook = every image in the folder of each selected collection
+  // (atelier / melekluxe / rivieracollection); with none selected, all three.
+  const selectedList = allCollections.filter((c) => selectedCollections.has(c));
+  const lookbookImages = getCollectionImages(selectedList);
+  const lookbookTitle = selectedList.length === 0 ? 'Lookbook' : `${selectedList.join(' · ')} Lookbook`;
+
+  const stepLook = useCallback(
+    (delta: number) => {
+      setSelectedLookImage((current) => {
+        if (!current) return current;
+        const i = lookbookImages.indexOf(current);
+        if (i === -1) return current;
+        return lookbookImages[(i + delta + lookbookImages.length) % lookbookImages.length];
+      });
+    },
+    [lookbookImages]
+  );
+
+  useEffect(() => {
+    if (!selectedLookImage) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedLookImage(null);
+      if (e.key === 'ArrowLeft') stepLook(-1);
+      if (e.key === 'ArrowRight') stepLook(1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selectedLookImage, stepLook]);
 
   return (
     <div className="pt-24 lg:pt-28">
@@ -149,15 +184,19 @@ export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
         {/* Quick category links */}
         <div className="mx-auto max-w-[1600px] flex flex-wrap gap-2 mt-6">
           {['All Products', ...allCollections].map((cat) => {
-            const isActive = false;
+            const isActive =
+              cat === 'All Products'
+                ? selectedCollections.size === 0
+                : selectedCollections.size === 1 && selectedCollections.has(cat as Collection);
             return (
               <button
                 key={cat}
                 onClick={() => {
                   if (cat === 'All Products') {
                     clearFilters();
-                  } else if (allCollections.includes(cat as Collection)) {
-                    toggleSet(selectedCollections, cat as Collection, setSelectedCollections);
+                  } else {
+                    // Show just this collection (click it again to go back to all)
+                    setSelectedCollections(isActive ? new Set() : new Set([cat as Collection]));
                   }
                 }}
                 className={`text-xs tracking-wider uppercase px-4 py-2 border transition-all ${
@@ -237,7 +276,7 @@ export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
                 <input
                   type="range"
                   min={0}
-                  max={200000}
+                  max={MAX_PRICE}
                   step={5000}
                   value={priceRange[1]}
                   onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
@@ -294,23 +333,23 @@ export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
           )}
         </div>
       </div>
-      {/* Lookbook */}
+      {/* Lookbook — every image from the selected collection's folder */}
       <div className="px-6 lg:px-10 py-12 bg-chocolate-900 border-t border-chocolate-800">
         <div className="mx-auto max-w-[1600px]">
           <div className="flex items-baseline justify-between mb-6">
-            <h2 className="font-serif text-2xl md:text-3xl text-ivory-50">Lookbook</h2>
-            <p className="text-xs text-ivory-300/50">{allGalleryImages.length} images</p>
+            <h2 className="font-serif text-2xl md:text-3xl text-ivory-50">{lookbookTitle}</h2>
+            <p className="text-xs text-ivory-300/50">{lookbookImages.length} images</p>
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-            {allGalleryImages.map((src) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+            {lookbookImages.map((src) => (
               <button
                 key={src}
                 onClick={() => setSelectedLookImage(src)}
-                className={`aspect-square overflow-hidden bg-chocolate-800 border-2 transition-colors ${
+                className={`aspect-[3/4] overflow-hidden bg-chocolate-800 border-2 transition-colors ${
                   selectedLookImage === src ? 'border-gold' : 'border-transparent hover:border-ivory-300/40'
                 }`}
               >
-                <img src={src} alt="" className="w-full h-full object-cover" />
+                <img src={src} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
@@ -329,12 +368,26 @@ export default function ShopPage({ onQuickView, onNavigate }: ShopPageProps) {
           >
             <X size={28} />
           </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); stepLook(-1); }}
+            className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 text-ivory-100 hover:text-gold transition-colors"
+            aria-label="Previous image"
+          >
+            <ChevronLeft size={36} />
+          </button>
           <img
             src={selectedLookImage}
             alt=""
             className="max-w-full max-h-full object-contain"
             onClick={(e) => e.stopPropagation()}
           />
+          <button
+            onClick={(e) => { e.stopPropagation(); stepLook(1); }}
+            className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 text-ivory-100 hover:text-gold transition-colors"
+            aria-label="Next image"
+          >
+            <ChevronRight size={36} />
+          </button>
         </div>
       )}
     </div>

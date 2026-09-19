@@ -3,7 +3,7 @@ import { Mail, Lock, Heart, Package, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useStore } from '@/store/StoreContext';
 import { products } from '@/data/products';
-import { formatPrice } from '@/lib/format';
+import Price from '@/components/Price';
 import type { Product } from '@/types';
 
 interface AccountPageProps {
@@ -106,7 +106,7 @@ export default function AccountPage({ onNavigate, onQuickView }: AccountPageProp
                             {p.name}
                           </button>
                           <p className="text-xs text-ivory-300/50">{p.collection}</p>
-                          <p className="text-sm text-gold mt-1">{formatPrice(p.price)}</p>
+                          <p className="text-sm text-gold mt-1"><Price amount={p.price} /></p>
                         </div>
                       </div>
                     ))}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react';
 import { useStore } from '@/store/StoreContext';
 import { products } from '@/data/products';
-import { formatPrice } from '@/lib/format';
+import Price from '@/components/Price';
 
 interface SearchOverlayProps {
   onNavigate: (page: string) => void;
@@ -82,7 +82,7 @@ export default function SearchOverlay({ onNavigate, onProductSelect }: SearchOve
                     {product.name}
                   </h3>
                   <p className="text-xs text-ivory-300/60">{product.collection}</p>
-                  <p className="text-sm text-gold mt-1">{formatPrice(product.price)}</p>
+                  <p className="text-sm text-gold mt-1"><Price amount={product.price} /></p>
                 </div>
               </button>
             ))}
@@ -97,7 +97,7 @@ export default function SearchOverlay({ onNavigate, onProductSelect }: SearchOve
           <div className="mt-8">
             <p className="text-xs tracking-wider-2 uppercase text-ivory-300/50 mb-4">Popular</p>
             <div className="flex flex-wrap gap-3">
-              {['Riviera', 'Polo', 'Luxe', 'Atelier', 'Trousers'].map((term) => (
+              {['Riviera', 'Polo', 'Luxe', 'Atelier', 'Sets'].map((term) => (
                 <button
                   key={term}
                   onClick={() => setQuery(term)}

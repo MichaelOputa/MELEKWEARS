@@ -1,6 +1,6 @@
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
 import { useStore } from '@/store/StoreContext';
-import { formatPrice } from '@/lib/format';
+import Price from '@/components/Price';
 
 interface CartDrawerProps {
   onNavigate: (page: string) => void;
@@ -68,7 +68,7 @@ export default function CartDrawer({ onNavigate, onCheckout }: CartDrawerProps) 
                     <p className="text-xs text-ivory-300/60 mt-1">
                       {item.color} · Size {item.size}
                     </p>
-                    <p className="text-sm text-gold mt-1">{formatPrice(item.product.price)}</p>
+                    <p className="text-sm text-gold mt-1"><Price amount={item.product.price} /></p>
                     <div className="flex items-center justify-between mt-auto">
                       <div className="flex items-center gap-3">
                         <button
@@ -103,7 +103,7 @@ export default function CartDrawer({ onNavigate, onCheckout }: CartDrawerProps) 
             <div className="px-8 py-6 border-t border-chocolate-700">
               <div className="flex justify-between items-center mb-6">
                 <span className="text-xs tracking-wider-2 uppercase text-ivory-300/70">Subtotal</span>
-                <span className="font-serif text-lg text-ivory-50">{formatPrice(cartTotal)}</span>
+                <span className="font-serif text-lg text-ivory-50"><Price amount={cartTotal} /></span>
               </div>
               <p className="text-xs text-ivory-300/50 mb-4">
                 Shipping calculated at checkout based on your destination.

@@ -16,15 +16,19 @@ import ContactPage from '@/pages/ContactPage';
 import CheckoutPage from '@/pages/CheckoutPage';
 import AccountPage from '@/pages/AccountPage';
 import { products } from '@/data/products';
-import type { Product } from '@/types';
+import type { Product, Collection } from '@/types';
 
 function AppContent() {
   const [page, setPage] = useState('home');
   const [selectedProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [productPageItem, setProductPageItem] = useState<Product | null>(null);
 
-  const handleNavigate = useCallback((newPage: string) => {
+  // Collection the Shop should open on (null = all collections)
+  const [shopCollection, setShopCollection] = useState<Collection | null>(null);
+
+  const handleNavigate = useCallback((newPage: string, collection?: Collection) => {
     setPage(newPage);
+    setShopCollection(collection ?? null);
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
@@ -51,7 +55,14 @@ function AppContent() {
       case 'home':
         return <HomePage onNavigate={handleNavigate} onQuickView={handleQuickView} />;
       case 'shop':
-        return <ShopPage onQuickView={handleQuickView} onNavigate={handleNavigate} />;
+        return (
+          <ShopPage
+            key={shopCollection ?? 'all'}
+            initialCollection={shopCollection}
+            onQuickView={handleQuickView}
+            onNavigate={handleNavigate}
+          />
+        );
       case 'product':
         return productPageItem ? (
           <ProductPage

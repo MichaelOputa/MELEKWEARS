@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import type { Collection } from '@/types';
 import { Instagram, Facebook } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 interface FooterProps {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: string, collection?: Collection) => void;
 }
 
 export default function Footer({ onNavigate }: FooterProps) {
@@ -39,9 +40,15 @@ export default function Footer({ onNavigate }: FooterProps) {
   };
 
   const footerLinks = {
-    Shop: ['Shop All', 'Riviera', 'Luxe Round Neck', 'Atelier', 'Polos', 'Tops'],
+    Shop: ['Shop All', 'Riviera', 'Luxe Round Neck', 'Atelier', 'Polos', 'Tops', 'Sets'],
     Brand: ['About', 'Collections', 'Craftsmanship', 'Journal', 'Contact'],
     Support: ['Shipping & Returns', 'Privacy Policy', 'Terms & Conditions'],
+  };
+
+  const collectionForLink: Record<string, Collection> = {
+    Riviera: 'Riviera',
+    'Luxe Round Neck': 'Melek Luxe Round Neck',
+    Atelier: 'Atelier',
   };
 
   const mapLinkToPage = (link: string): string => {
@@ -52,6 +59,7 @@ export default function Footer({ onNavigate }: FooterProps) {
       Atelier: 'shop',
       Polos: 'shop',
       Tops: 'shop',
+      Sets: 'shop',
       About: 'about',
       Collections: 'collections',
       Craftsmanship: 'craftsmanship',
@@ -129,7 +137,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                 {links.map((link) => (
                   <li key={link}>
                     <button
-                      onClick={() => onNavigate(mapLinkToPage(link))}
+                      onClick={() => onNavigate(mapLinkToPage(link), collectionForLink[link])}
                       className="text-sm text-ivory-200/70 hover:text-ivory-50 transition-colors text-left"
                     >
                       {link}

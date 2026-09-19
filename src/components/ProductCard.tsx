@@ -1,7 +1,7 @@
 import { Heart, Eye, ShoppingBag } from 'lucide-react';
 import type { Product } from '@/types';
 import { useStore } from '@/store/StoreContext';
-import { formatPrice } from '@/lib/format';
+import Price from '@/components/Price';
 
 interface ProductCardProps {
   product: Product;
@@ -68,7 +68,7 @@ export default function ProductCard({ product, onQuickView, onNavigate }: Produc
         >
           {product.name}
         </button>
-        <p className="text-sm text-ivory-200 mt-1">{formatPrice(product.price)}</p>
+        <p className="text-sm text-ivory-200 mt-1"><Price amount={product.price} /></p>
         <div className="flex items-center justify-center gap-1.5 mt-2">
           {product.colors.map((color) => (
             <span

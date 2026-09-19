@@ -20,7 +20,8 @@
  *                         gallery to `allGalleryImages`.
  */
 
-import type { Product } from '@/types';
+import type { Product, Collection } from '@/types';
+import { collectionFolderImages } from 'virtual:collection-images';
 
 import { atelierProducts, atelierGallery, atelierCoverImage } from './atelier';
 import { melekluxeProducts, melekluxeGallery, melekluxeCoverImage } from './melekluxe';
@@ -44,6 +45,17 @@ export const collectionImages = {
 export const allGalleryImages = Array.from(
   new Set([...atelierGallery, ...essentialsGallery, ...melekluxeGallery, ...rivieracollectionGallery])
 );
+
+/**
+ * Every image in a collection's folder (atelier / melekluxe / rivieracollection).
+ * Pass the selected collections; an empty list means all three folders.
+ * The list comes from the folder itself (see vite.config.ts), not from the
+ * hand-kept gallery arrays above.
+ */
+export function getCollectionImages(collections: Collection[] = []): string[] {
+  const names = (collections.length ? collections : Object.keys(collectionFolderImages)) as Collection[];
+  return names.flatMap((name) => collectionFolderImages[name] ?? []);
+}
 
 // ─── Re-exports (unchanged public API) ───────────────────────────────────
 

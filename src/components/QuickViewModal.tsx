@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Heart, ShoppingBag, Minus, Plus } from 'lucide-react';
 import type { Product, Size } from '@/types';
 import { useStore } from '@/store/StoreContext';
-import { formatPrice } from '@/lib/format';
+import Price from '@/components/Price';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -75,7 +75,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
         <div className="p-8 flex flex-col">
           <p className="text-[10px] tracking-wider-2 uppercase text-gold/80">{product.collection}</p>
           <h2 className="font-serif text-2xl text-ivory-50 mt-2">{product.name}</h2>
-          <p className="text-lg text-gold mt-2">{formatPrice(product.price)}</p>
+          <p className="text-lg text-gold mt-2"><Price amount={product.price} /></p>
 
           <p className="text-sm text-ivory-200/80 leading-relaxed mt-4">{product.description}</p>
 

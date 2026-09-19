@@ -8,17 +8,21 @@ interface SignaturePiecesProps {
   onNavigate: (page: string) => void;
 }
 
+// Each label must match a product's `signatureLabel` — the product grid below
+// shows the first product found for each group, in this order.
 const signatureGroups = [
-  { label: 'Open-Collar Johnny Polos', description: 'Placket-less, buttonless collars designed for casual elegance.' },
-  { label: 'Luxe Round-Neck Tops', description: 'Minimalist, high-fit crew necks made for refined everyday dressing.' },
-  { label: 'Waffle-Knit Long-Sleeve Polos', description: 'Structured, tactile long-sleeve pieces crafted for texture and comfort.' },
-  { label: 'Two-Piece Sets & Lounge Trousers', description: 'Relaxed-fit tailored trousers and coordinated sets designed for effortless style.' },
+  { label: 'Open-Collar Melek Polos', description: 'Placket-less, buttonless collars designed for casual elegance.' },
+  { label: 'Melek Luxe Round-Neck Tees', description: 'Minimalist, high-fit crew necks made for refined everyday dressing.' },
+  { label: 'Atelier Collared Shirts', description: 'Structured, tactile long-sleeve shirts crafted for texture and comfort.' },
+  { label: 'Two-Piece Sets', description: 'Up-and-down sets from Atelier and Melek Luxe, cut to match.' },
 ];
 
 export default function SignaturePieces({ onQuickView, onNavigate }: SignaturePiecesProps) {
   const { ref, visible } = useReveal();
 
-  const featured = products.filter((p) => p.signatureLabel).slice(0, 4);
+  const featured = signatureGroups
+    .map((group) => products.find((p) => p.signatureLabel === group.label))
+    .filter((p): p is Product => Boolean(p));
 
   return (
     <section className="px-6 lg:px-10 py-24 lg:py-32 bg-chocolate-950">

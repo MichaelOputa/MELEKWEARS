@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Heart, ShoppingBag, Minus, Plus, ChevronLeft, Truck, Shield, RefreshCw } from 'lucide-react';
 import { products } from '@/data/products';
 import { useStore } from '@/store/StoreContext';
-import { formatPrice } from '@/lib/format';
+import Price from '@/components/Price';
 import ProductCard from '@/components/ProductCard';
 import type { Product, Size } from '@/types';
 
@@ -94,7 +94,7 @@ export default function ProductPage({ product, onNavigate, onQuickView }: Produc
           <div className="flex flex-col">
             <p className="text-xs tracking-wider-2 uppercase text-gold/80">{product.collection}</p>
             <h1 className="font-serif text-3xl lg:text-4xl text-ivory-50 mt-2">{product.name}</h1>
-            <p className="text-xl text-gold mt-3">{formatPrice(product.price)}</p>
+            <p className="text-xl text-gold mt-3"><Price amount={product.price} /></p>
 
             <p className="text-sm text-ivory-200/80 leading-relaxed mt-6">{product.description}</p>
 

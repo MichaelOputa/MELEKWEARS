@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronLeft, CreditCard, Truck, Check } from 'lucide-react';
 import { useStore } from '@/store/StoreContext';
-import { formatPrice } from '@/lib/format';
+import Price from '@/components/Price';
 
 interface CheckoutPageProps {
   onNavigate: (page: string) => void;
@@ -143,7 +143,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                         <p className="text-xs text-ivory-300/50">{region}</p>
                       </div>
                     </div>
-                    <p className="text-sm text-gold">{formatPrice(shippingCost)}</p>
+                    <p className="text-sm text-gold"><Price amount={shippingCost} /></p>
                   </label>
                 </div>
 
@@ -194,7 +194,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                   <div className="flex-1">
                     <p className="text-xs text-ivory-100">{item.product.name}</p>
                     <p className="text-[10px] text-ivory-300/50">{item.color} · {item.size} · Qty {item.quantity}</p>
-                    <p className="text-xs text-gold mt-1">{formatPrice(item.product.price * item.quantity)}</p>
+                    <p className="text-xs text-gold mt-1"><Price amount={item.product.price * item.quantity} /></p>
                   </div>
                 </div>
               ))}
@@ -203,15 +203,15 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             <div className="border-t border-chocolate-700 mt-6 pt-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-ivory-300/60">Subtotal</span>
-                <span className="text-ivory-100">{formatPrice(cartTotal)}</span>
+                <span className="text-ivory-100"><Price amount={cartTotal} /></span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-ivory-300/60 flex items-center gap-1"><Truck size={14} /> Shipping</span>
-                <span className="text-ivory-100">{formatPrice(shippingCost)}</span>
+                <span className="text-ivory-100"><Price amount={shippingCost} /></span>
               </div>
               <div className="flex justify-between text-base pt-2 border-t border-chocolate-700">
                 <span className="font-serif text-ivory-50">Total</span>
-                <span className="font-serif text-gold">{formatPrice(grandTotal)}</span>
+                <span className="font-serif text-gold"><Price amount={grandTotal} /></span>
               </div>
             </div>
           </div>
