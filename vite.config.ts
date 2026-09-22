@@ -18,7 +18,9 @@ const COLLECTION_FOLDERS: Record<string, string> = {
   Atelier: 'atelier',
   'Melek Luxe Collections': 'melekluxe',
   Riviera: 'rivieracollection',
+  'Melek Essentials': 'melekessentials',
 };
+
 const WEB_IMAGE = /\.(jpe?g|png|webp|gif|avif)$/i;
 
 function collectionImages(): Plugin {

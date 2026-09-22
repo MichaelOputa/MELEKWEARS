@@ -26,6 +26,7 @@ import { collectionFolderImages } from 'virtual:collection-images';
 import { atelierProducts, atelierGallery, atelierCoverImage } from './atelier';
 import { melekluxeProducts, melekluxeGallery, melekluxeCoverImage } from './melekluxe';
 import { rivieraProducts, rivieracollectionGallery, rivieraCoverImage } from './riviera';
+import { melekessentialsProducts, melekessentialsGallery, essentialsCoverImage } from './melekessentials';
 import { essentialsGallery } from './brand';
 
 // ─── "All" = every lineup, in tab order ──────────────────────────────────
@@ -34,21 +35,23 @@ export const products: Product[] = [
   ...atelierProducts,
   ...melekluxeProducts,
   ...rivieraProducts,
+  ...melekessentialsProducts,
 ];
 
 export const collectionImages = {
   Atelier: atelierCoverImage,
   'Melek Luxe Collections': melekluxeCoverImage,
   Riviera: rivieraCoverImage,
+  'Melek Essentials': essentialsCoverImage,
 };
 
 export const allGalleryImages = Array.from(
-  new Set([...atelierGallery, ...essentialsGallery, ...melekluxeGallery, ...rivieracollectionGallery])
+  new Set([...atelierGallery, ...essentialsGallery, ...melekluxeGallery, ...rivieracollectionGallery, ...melekessentialsGallery])
 );
 
 /**
- * Every image in a collection's folder (atelier / melekluxe / rivieracollection).
- * Pass the selected collections; an empty list means all three folders.
+ * Every image in a collection's folder (atelier / melekluxe / rivieracollection / melekessentials).
+ * Pass the selected collections; an empty list means all folders.
  * The list comes from the folder itself (see vite.config.ts), not from the
  * hand-kept gallery arrays above.
  */
@@ -70,8 +73,10 @@ export function getCollectionImages(collections: Collection[] = []): string[] {
 export { atelierGallery, craftsmanshipImages } from './atelier';
 export { melekluxeGallery } from './melekluxe';
 export { rivieracollectionGallery } from './riviera';
+export { melekessentialsGallery, essentialsCoverImage } from './melekessentials';
 export { heroImage, brandStatementImage, aboutImage, packagingImage, essentialsGallery } from './brand';
 export { journalArticles } from './journal';
 
 // Per-lineup lists, for pages that render a single collection.
-export { atelierProducts, melekluxeProducts, rivieraProducts };
+export { atelierProducts, melekluxeProducts, rivieraProducts, melekessentialsProducts };
+

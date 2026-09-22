@@ -40,7 +40,7 @@ export default function Footer({ onNavigate }: FooterProps) {
   };
 
   const footerLinks = {
-    Shop: ['Shop All', 'Riviera', 'Melek Luxe Collections', 'Atelier', 'Polos', 'Tops', 'Sets'],
+    Shop: ['Shop All', 'Riviera', 'Melek Luxe Collections', 'Atelier', 'Melek Essentials', 'Polos', 'Tops', 'Sets'],
     Brand: ['About', 'Collections', 'Craftsmanship', 'Journal', 'Contact'],
     Support: ['Shipping & Returns', 'Privacy Policy', 'Terms & Conditions'],
   };
@@ -49,6 +49,7 @@ export default function Footer({ onNavigate }: FooterProps) {
     Riviera: 'Riviera',
     'Melek Luxe Collections': 'Melek Luxe Collections',
     Atelier: 'Atelier',
+    'Melek Essentials': 'Melek Essentials',
   };
 
   const mapLinkToPage = (link: string): string => {
@@ -57,9 +58,11 @@ export default function Footer({ onNavigate }: FooterProps) {
       Riviera: 'shop',
       'Melek Luxe Collections': 'shop',
       Atelier: 'shop',
+      'Melek Essentials': 'shop',
       Polos: 'shop',
       Tops: 'shop',
       Sets: 'shop',
+
       About: 'about',
       Collections: 'collections',
       Craftsmanship: 'craftsmanship',

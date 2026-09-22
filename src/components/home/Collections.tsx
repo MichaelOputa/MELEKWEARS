@@ -31,6 +31,12 @@ const collections: {
     cta: 'Explore Atelier',
     image: collectionImages.Atelier,
   },
+  {
+    name: 'Melek Essentials',
+    description: 'Foundational luxury wardrobe staples crafted in timeless signature colorways.',
+    cta: 'Explore Essentials',
+    image: collectionImages['Melek Essentials'],
+  },
 ];
 
 export default function Collections({ onNavigate }: CollectionsProps) {
@@ -44,7 +50,8 @@ export default function Collections({ onNavigate }: CollectionsProps) {
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-ivory-50">The Collections</h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+
           {collections.map((col, i) => (
             <div
               key={col.name}

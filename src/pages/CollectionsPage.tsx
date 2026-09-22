@@ -35,6 +35,13 @@ const collections: {
     image: collectionImages.Atelier,
     longDescription: 'The Atelier line represents our most structured work — heavy-gauge textured knits, waffle weaves, and tailored resort fits, from the long-sleeve collared shirt to the matching two-piece set. Each drop is a study in precision construction and tactile fabric.',
   },
+  {
+    name: 'Melek Essentials',
+    description: 'Foundational luxury wardrobe staples crafted in timeless signature colorways.',
+    cta: 'Explore Essentials',
+    image: collectionImages['Melek Essentials'],
+    longDescription: 'Melek Essentials provides the bedrock of refined dressing. Designed with premium heavy-combed cotton, precision collar stitching, and an expansive spectrum of earthy neutrals and refined tones, each piece brings effortless longevity to your daily uniform.',
+  },
 ];
 
 export default function CollectionsPage({ onNavigate }: CollectionsPageProps) {
@@ -44,8 +51,9 @@ export default function CollectionsPage({ onNavigate }: CollectionsPageProps) {
     <div className="pt-24 lg:pt-28">
       <div className="px-6 lg:px-10 py-12 text-center bg-chocolate-950">
         <h1 className="font-serif text-4xl md:text-5xl text-ivory-50">Collections</h1>
-        <p className="text-sm text-ivory-200/60 mt-4">Three lines. One standard of distinction.</p>
+        <p className="text-sm text-ivory-200/60 mt-4">Four lines. One standard of distinction.</p>
       </div>
+
 
       <div ref={ref} className="bg-chocolate-950">
         {collections.map((col, i) => (

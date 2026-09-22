@@ -15,19 +15,25 @@ interface ShopPageProps {
   onNavigate: (page: string, collection?: Collection) => void;
 }
 
-const allCollections: Collection[] = ['Riviera', 'Melek Luxe Collections', 'Atelier'];
+const allCollections: Collection[] = ['Riviera', 'Melek Luxe Collections', 'Atelier', 'Melek Essentials'];
 const allSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const allColors = [
   { name: 'Ivory', hex: '#f0e6d9' },
   { name: 'Cream', hex: '#f9f4ed' },
+  { name: 'White', hex: '#ffffff' },
   { name: 'Stone', hex: '#c2ab87' },
   { name: 'Cocoa', hex: '#6f4a36' },
   { name: 'Chocolate', hex: '#553828' },
   { name: 'Espresso', hex: '#3d2820' },
   { name: 'Black', hex: '#1a1a1a' },
+  { name: 'Forest Green', hex: '#3b4b32' },
+  { name: 'Wine', hex: '#4a1521' },
+  { name: 'Powder Blue', hex: '#9bb7d4' },
+  { name: 'Lavender', hex: '#8a7eb5' },
 ];
 
-const MAX_PRICE = 100000;
+const MAX_PRICE = 150000;
+
 
 type SortOption = 'featured' | 'price-low' | 'price-high' | 'name';
 

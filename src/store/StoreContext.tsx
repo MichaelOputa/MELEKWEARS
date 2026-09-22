@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { Product, CartItem, Size } from '@/types';
+import { supabase } from '@/lib/supabase';
 
 interface StoreContextValue {
   cart: CartItem[];
@@ -10,6 +11,7 @@ interface StoreContextValue {
   addToCart: (product: Product, size: Size, color: string, quantity?: number) => void;
   removeFromCart: (index: number) => void;
   updateQuantity: (index: number, quantity: number) => void;
+  clearCart: () => void;
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
   setCartOpen: (open: boolean) => void;
@@ -18,6 +20,7 @@ interface StoreContextValue {
   cartCount: number;
   cartTotal: number;
 }
+
 
 const StoreContext = createContext<StoreContextValue | undefined>(undefined);
 
@@ -50,6 +53,43 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('melek-wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
+  // Sync wishlist with Supabase for authenticated users
+  useEffect(() => {
+    const client = supabase;
+    if (!client) return;
+
+    const syncWishlist = async () => {
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        if (!session?.user) return;
+
+        const { data, error } = await client
+          .from('user_wishlists')
+          .select('product_id')
+          .eq('user_id', session.user.id);
+
+        if (!error && data) {
+          const remoteProductIds = data.map((item: { product_id: string }) => item.product_id);
+          setWishlist((prev) => Array.from(new Set([...prev, ...remoteProductIds])));
+        }
+      } catch {
+        // Silently fall back to local storage
+      }
+    };
+
+    syncWishlist();
+
+    const { data: sub } = client.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        syncWishlist();
+      }
+    });
+
+    return () => {
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
   const addToCart = (product: Product, size: Size, color: string, quantity = 1) => {
     setCart((prev) => {
       const existing = prev.findIndex(
@@ -78,11 +118,40 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const toggleWishlist = (productId: string) => {
-    setWishlist((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
-    );
+  const clearCart = () => {
+    setCart([]);
   };
+
+  const toggleWishlist = async (productId: string) => {
+    const isAdding = !wishlist.includes(productId);
+    setWishlist((prev) =>
+      isAdding ? [...prev, productId] : prev.filter((id) => id !== productId),
+    );
+
+    const client = supabase;
+    if (client) {
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        if (session?.user) {
+          if (isAdding) {
+            await client.from('user_wishlists').upsert(
+              { user_id: session.user.id, product_id: productId },
+              { onConflict: 'user_id,product_id' }
+            );
+          } else {
+            await client
+              .from('user_wishlists')
+              .delete()
+              .eq('user_id', session.user.id)
+              .eq('product_id', productId);
+          }
+        }
+      } catch {
+        // Fall back to local state
+      }
+    }
+  };
+
 
   const isInWishlist = (productId: string) => wishlist.includes(productId);
 
@@ -100,6 +169,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,
         toggleWishlist,
         isInWishlist,
         setCartOpen,
