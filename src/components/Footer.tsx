@@ -59,8 +59,6 @@ export default function Footer({ onNavigate }: FooterProps) {
       'Melek Luxe Collections': 'shop',
       Atelier: 'shop',
       'Melek Essentials': 'shop',
-      Polos: 'shop',
-      Tops: 'shop',
       Sets: 'shop',
 
       About: 'about',
