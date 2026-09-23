@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, User, ShoppingBag, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X } from 'lucide-react';
 import { useStore } from '@/store/StoreContext';
 
 interface NavbarProps {
@@ -24,6 +24,7 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
     { label: 'About', page: 'about' },
     { label: 'Craftsmanship', page: 'craftsmanship' },
     { label: 'Journal', page: 'journal' },
+    { label: 'Contact', page: 'contact' },
   ];
 
   const handleNav = (page: string) => {
@@ -99,13 +100,6 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
               <Search size={20} />
             </button>
             <button
-              onClick={() => onNavigate('account')}
-              className="hidden sm:block text-ivory-100 hover:text-gold transition-colors"
-              aria-label="Account"
-            >
-              <User size={20} />
-            </button>
-            <button
               onClick={() => setCartOpen(true)}
               className="relative text-ivory-100 hover:text-gold transition-colors"
               aria-label="Shopping bag"
@@ -150,12 +144,6 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
                 {link.label}
               </button>
             ))}
-            <button
-              onClick={() => handleNav('account')}
-              className="text-sm tracking-wider-2 uppercase text-left text-ivory-100 hover:text-gold transition-colors"
-            >
-              Account
-            </button>
           </nav>
         </div>
       </div>

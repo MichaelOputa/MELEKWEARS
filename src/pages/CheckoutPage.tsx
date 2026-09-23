@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, CreditCard, Truck, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronLeft, MessageCircle, Check } from 'lucide-react';
 import { useStore } from '@/store/StoreContext';
-import { supabase } from '@/lib/supabase';
 import Price from '@/components/Price';
 import Img from '@/components/Img';
 
@@ -9,181 +8,94 @@ interface CheckoutPageProps {
   onNavigate: (page: string) => void;
 }
 
-const regions = ['Nigeria', 'Europe', 'Americas'];
+const WHATSAPP_NUMBER = '2348134525822';
+
+function formatWhatsAppMessage(
+  cart: { product: { name: string; price: number }; size: string; color: string; quantity: number }[],
+  name: string,
+  phone: string,
+  address: string,
+  city: string,
+  notes: string,
+  cartTotal: number,
+) {
+  const itemLines = cart
+    .map(
+      (item) =>
+        `• ${item.product.name} (Size: ${item.size}, Colour: ${item.color}) × ${item.quantity} — ₦${(item.product.price * item.quantity).toLocaleString()}`,
+    )
+    .join('\n');
+
+  const lines = [
+    'Hello MelekWears! 🛍️ I would like to place an order:',
+    '',
+    '*Items:*',
+    itemLines,
+    '',
+    `*Order Total:* ₦${cartTotal.toLocaleString()} (+ shipping)`,
+    '',
+    '*My Details:*',
+    `Name: ${name}`,
+    `Phone: ${phone}`,
+    `Address: ${address}${city ? `, ${city}` : ''}`,
+    notes ? `Notes: ${notes}` : '',
+    '',
+    'Kindly confirm availability and shipping. Thank you! 🙏',
+  ]
+    .filter((l) => l !== undefined)
+    .join('\n');
+
+  return encodeURIComponent(lines);
+}
 
 export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const { cart, cartTotal, clearCart } = useStore();
-  const [step, setStep] = useState<'information' | 'shipping' | 'payment'>('information');
-  const [region, setRegion] = useState('Nigeria');
-  const [orderComplete, setOrderComplete] = useState(false);
-  const [confirmedOrderNumber, setConfirmedOrderNumber] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
-  // Customer Information
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
-  const [apartment, setApartment] = useState('');
   const [city, setCity] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [userId, setUserId] = useState<string | null>(null);
+  const [notes, setNotes] = useState('');
+  const [sent, setSent] = useState(false);
 
-  // Payment details (mock inputs)
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardExpiry, setCardExpiry] = useState('');
-  const [cardCvc, setCardCvc] = useState('');
-  const [cardName, setCardName] = useState('');
-
-  const shippingCost = region === 'Nigeria' ? 3000 : region === 'Europe' ? 18000 : 25000;
-  const grandTotal = cartTotal + shippingCost;
-
-  // Prefill details if user is signed in
-  useEffect(() => {
-    const client = supabase;
-    if (!client) return;
-    const fetchUserData = async () => {
-      try {
-        const { data: { session } } = await client.auth.getSession();
-        if (!session?.user) return;
-        setUserId(session.user.id);
-        if (session.user.email) setEmail(session.user.email);
-
-        const { data: profile } = await client
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-
-        if (profile) {
-          if (profile.full_name) {
-            const parts = profile.full_name.trim().split(' ');
-            setFirstName(parts[0] || '');
-            setLastName(parts.slice(1).join(' ') || '');
-            setCardName(profile.full_name);
-          }
-          if (profile.phone) setPhone(profile.phone);
-          if (profile.address) setAddress(profile.address);
-          if (profile.city) setCity(profile.city);
-          if (profile.postal_code) setPostalCode(profile.postal_code);
-          if (profile.country && regions.includes(profile.country)) {
-            setRegion(profile.country);
-          }
-        }
-      } catch {
-        // Fallback silently if profiles table is not yet created or empty
-      }
-    };
-    fetchUserData();
-  }, []);
-
-  const handlePlaceOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage('');
-
-    const randomSuffix = Math.floor(100000 + Math.random() * 900000);
-    const orderNumber = `MW-${new Date().getFullYear()}-${randomSuffix}`;
-    const fullCustomerName = `${firstName} ${lastName}`.trim() || 'Melek Customer';
-    const fullShippingAddress = apartment ? `${address}, ${apartment}` : address;
-
-    const client = supabase;
-    if (client) {
-      try {
-        // 1. Insert order record
-        const { data: orderData, error: orderError } = await client
-          .from('orders')
-          .insert({
-            order_number: orderNumber,
-            user_id: userId,
-            customer_email: email,
-            customer_name: fullCustomerName,
-            customer_phone: phone,
-            shipping_address: fullShippingAddress,
-            shipping_city: city,
-            shipping_postal_code: postalCode,
-            shipping_country: region,
-            shipping_cost: shippingCost,
-            subtotal: cartTotal,
-            total: grandTotal,
-            status: 'processing',
-            payment_method: 'card',
-            payment_status: 'completed',
-          })
-          .select()
-          .single();
-
-        if (orderError) {
-          console.error('Order creation error:', orderError);
-          // If orders table does not exist yet in Supabase, show note but still allow order confirmation
-          if (orderError.message.includes('public.orders')) {
-            console.warn('Orders table not yet created in Supabase. Simulating order placement.');
-          } else {
-            setErrorMessage(orderError.message || 'Failed to place order. Please try again.');
-            setIsSubmitting(false);
-            return;
-          }
-        }
-
-        // 2. Insert order items if order was persisted
-        if (orderData?.id) {
-          const itemsPayload = cart.map((item) => ({
-            order_id: orderData.id,
-            product_id: item.product.id,
-            product_name: item.product.name,
-            product_image: item.product.images[0] || null,
-            size: item.size,
-            color: item.color,
-            price: item.product.price,
-            quantity: item.quantity,
-          }));
-
-          const { error: itemsError } = await client
-            .from('order_items')
-            .insert(itemsPayload);
-
-          if (itemsError) {
-            console.error('Order items error:', itemsError);
-          }
-        }
-      } catch (err: unknown) {
-        console.error('Order placement exception:', err);
-      }
-    }
-
-
-    setConfirmedOrderNumber(orderNumber);
-    clearCart();
-    setIsSubmitting(false);
-    setOrderComplete(true);
-  };
-
-  if (orderComplete) {
+  if (cart.length === 0 && !sent) {
     return (
-      <div className="pt-24 lg:pt-28 min-h-screen flex items-center justify-center px-6 bg-chocolate-950">
-        <div className="text-center max-w-lg bg-chocolate-900 border border-chocolate-800 p-8 sm:p-12">
-          <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center mx-auto mb-6">
-            <Check size={32} className="text-gold" />
+      <div className="min-h-screen bg-chocolate-950 flex items-center justify-center px-6">
+        <div className="text-center">
+          <p className="font-serif text-2xl text-ivory-100 mb-4">Your bag is empty</p>
+          <button
+            onClick={() => onNavigate('shop')}
+            className="text-xs tracking-wider-2 uppercase text-gold hover:text-gold-light transition-colors"
+          >
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (sent) {
+    return (
+      <div className="min-h-screen bg-chocolate-950 flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 rounded-full bg-green-600/20 flex items-center justify-center mx-auto mb-6">
+            <Check size={32} className="text-green-400" />
           </div>
-          <h1 className="font-serif text-3xl text-ivory-50">Order Confirmed</h1>
-          <p className="text-xs uppercase tracking-widest text-gold mt-2 font-mono">
-            {confirmedOrderNumber}
+          <h1 className="font-serif text-3xl text-ivory-50 mb-3">Order Sent!</h1>
+          <p className="text-sm text-ivory-200/70 leading-relaxed mb-8">
+            Your order details have been sent to MelekWears on WhatsApp. We will get back to you
+            shortly to confirm your order and arrange delivery.
           </p>
-          <p className="text-sm text-ivory-200/70 mt-4 leading-relaxed">
-            Thank you for acquiring from MelekWears. A confirmation has been sent to <span className="text-gold">{email}</span>. Your pieces are being tailored and prepared with exquisite care.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => onNavigate('account')}
-              className="border border-chocolate-600 text-ivory-100 text-xs tracking-wider-2 uppercase px-8 py-3.5 hover:border-gold hover:text-gold transition-colors"
+              onClick={() => onNavigate('shop')}
+              className="bg-gold text-chocolate-950 text-xs tracking-wider-2 uppercase px-8 py-3 hover:bg-gold-light transition-colors"
             >
-              View Orders
+              Continue Shopping
             </button>
             <button
               onClick={() => onNavigate('home')}
-              className="bg-gold text-chocolate-950 text-xs tracking-wider-2 uppercase px-8 py-3.5 hover:bg-gold-light transition-colors"
+              className="border border-chocolate-600 text-ivory-200 text-xs tracking-wider-2 uppercase px-8 py-3 hover:border-gold transition-colors"
             >
               Return Home
             </button>
@@ -193,284 +105,175 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     );
   }
 
-  if (cart.length === 0) {
-    return (
-      <div className="pt-24 lg:pt-28 min-h-screen flex items-center justify-center px-6 bg-chocolate-950">
-        <div className="text-center">
-          <p className="font-serif text-2xl text-ivory-200/60">Your bag is empty</p>
-          <button
-            onClick={() => onNavigate('shop')}
-            className="mt-6 text-xs tracking-wider-2 uppercase text-gold border border-gold/50 px-8 py-3 hover:bg-gold hover:text-chocolate-950 transition-all"
-          >
-            Shop the Collection
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const handleOrder = () => {
+    if (!name.trim() || !phone.trim() || !address.trim()) return;
+    const msg = formatWhatsAppMessage(cart, name, phone, address, city, notes, cartTotal);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+    clearCart();
+    setSent(true);
+  };
+
+  const isValid = name.trim() && phone.trim() && address.trim();
 
   return (
-    <div className="pt-24 lg:pt-28 bg-chocolate-950 min-h-screen">
-      <div className="px-6 lg:px-10 py-8">
+    <div className="min-h-screen bg-chocolate-950 pt-28 pb-24 px-6 lg:px-10">
+      <div className="mx-auto max-w-[1100px]">
+        {/* Back */}
         <button
           onClick={() => onNavigate('shop')}
-          className="flex items-center gap-2 text-xs tracking-wider-2 uppercase text-ivory-300/60 hover:text-gold transition-colors mb-8"
+          className="flex items-center gap-2 text-xs tracking-wider-2 uppercase text-ivory-200/60 hover:text-ivory-100 transition-colors mb-12"
         >
-          <ChevronLeft size={16} /> Continue Shopping
+          <ChevronLeft size={16} />
+          Back to Shop
         </button>
 
-        <h1 className="font-serif text-3xl lg:text-4xl text-ivory-50 mb-8">Checkout</h1>
-
-        {/* Steps */}
-        <div className="flex items-center gap-4 mb-10">
-          {(['information', 'shipping', 'payment'] as const).map((s, i) => (
-            <div key={s} className="flex items-center gap-4">
-              <div
-                className={`flex items-center gap-2 ${step === s ? 'text-gold' : step > s ? 'text-gold/60' : 'text-ivory-300/40'}`}
-              >
-                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs border ${
-                  step === s ? 'border-gold' : step > s ? 'border-gold/60' : 'border-ivory-300/30'
-                }`}>
-                  {step > s ? <Check size={12} /> : i + 1}
-                </span>
-                <span className="text-xs tracking-wider-2 uppercase">{s}</span>
-              </div>
-              {i < 2 && <div className="w-8 h-px bg-chocolate-700" />}
-            </div>
-          ))}
-        </div>
-
-        <div className="grid lg:grid-cols-[1fr_400px] gap-12">
-          {/* Form */}
+        <div className="grid lg:grid-cols-[1fr_400px] gap-16">
+          {/* Left — form */}
           <div>
-            {step === 'information' && (
-              <form
-                onSubmit={(e) => { e.preventDefault(); setStep('shipping'); }}
-                className="space-y-5"
-              >
-                <h2 className="font-serif text-xl text-ivory-50 mb-4">Contact Information</h2>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="First name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                    className="bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Last name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                    className="bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
-                  />
-                </div>
+            <h1 className="font-serif text-3xl text-ivory-50 mb-2">Complete Your Order</h1>
+            <p className="text-sm text-ivory-200/60 mb-10">
+              Fill in your details and we'll send your order directly to our WhatsApp. A team member
+              will confirm and arrange delivery.
+            </p>
+
+            <div className="space-y-6">
+              <div>
+                <label className="block text-xs tracking-wider-2 uppercase text-gold mb-2">
+                  Full Name *
+                </label>
                 <input
-                  type="email"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your full name"
+                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-300/40 focus:outline-none focus:border-gold transition-colors"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs tracking-wider-2 uppercase text-gold mb-2">
+                  Phone Number *
+                </label>
                 <input
-                  type="tel"
-                  placeholder="Phone number"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  required
-                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
+                  placeholder="+234 000 000 0000"
+                  type="tel"
+                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-300/40 focus:outline-none focus:border-gold transition-colors"
                 />
+              </div>
 
-                <h2 className="font-serif text-xl text-ivory-50 mb-4 mt-8">Shipping Address</h2>
+              <div>
+                <label className="block text-xs tracking-wider-2 uppercase text-gold mb-2">
+                  Delivery Address *
+                </label>
                 <input
-                  type="text"
-                  placeholder="Street Address"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  required
-                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
+                  placeholder="Street address"
+                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-300/40 focus:outline-none focus:border-gold transition-colors"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs tracking-wider-2 uppercase text-gold mb-2">
+                  City / State
+                </label>
                 <input
-                  type="text"
-                  placeholder="Apartment, suite, etc. (optional)"
-                  value={apartment}
-                  onChange={(e) => setApartment(e.target.value)}
-                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="Lagos, Abuja, Port Harcourt…"
+                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-300/40 focus:outline-none focus:border-gold transition-colors"
                 />
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    required
-                    className="bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Postal code"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                    className="bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
-                  />
-                </div>
-                <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
-                  className="w-full bg-chocolate-900 border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
-                >
-                  {regions.map((r) => (
-                    <option key={r} value={r} className="bg-chocolate-900">{r}</option>
-                  ))}
-                </select>
+              </div>
 
-                <button
-                  type="submit"
-                  className="bg-gold text-chocolate-950 text-xs tracking-wider-2 uppercase px-10 py-4 hover:bg-gold-light transition-colors mt-4"
-                >
-                  Continue to Shipping
-                </button>
-              </form>
-            )}
-
-            {step === 'shipping' && (
-              <form onSubmit={(e) => { e.preventDefault(); setStep('payment'); }} className="space-y-5">
-                <h2 className="font-serif text-xl text-ivory-50 mb-4">Shipping Method</h2>
-                <div className="space-y-3">
-                  <label className="flex items-center justify-between border border-chocolate-600 p-4 cursor-pointer hover:border-gold transition-colors">
-                    <div className="flex items-center gap-3">
-                      <input type="radio" name="shipping" defaultChecked className="accent-gold" />
-                      <div>
-                        <p className="text-sm text-ivory-100">Express Insured Delivery</p>
-                        <p className="text-xs text-ivory-300/50">{region} (3-5 business days)</p>
-                      </div>
-                    </div>
-                    <p className="text-sm text-gold"><Price amount={shippingCost} /></p>
-                  </label>
-                </div>
-
-                <div className="flex gap-3 mt-6">
-                  <button
-                    type="button"
-                    onClick={() => setStep('information')}
-                    className="text-xs tracking-wider-2 uppercase text-ivory-300/60 hover:text-gold transition-colors px-6 py-4"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-gold text-chocolate-950 text-xs tracking-wider-2 uppercase px-10 py-4 hover:bg-gold-light transition-colors"
-                  >
-                    Continue to Payment
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {step === 'payment' && (
-              <form onSubmit={handlePlaceOrder} className="space-y-5">
-                <h2 className="font-serif text-xl text-ivory-50 mb-4">Payment Details</h2>
-                <div className="flex items-center gap-2 text-xs text-ivory-300/50 mb-4">
-                  <CreditCard size={16} />
-                  <span>Payments are 256-bit encrypted and processed securely.</span>
-                </div>
-
-                {errorMessage && (
-                  <div className="p-3 border border-red-500/40 bg-red-950/20 text-red-400 text-xs flex items-center gap-2">
-                    <AlertCircle size={16} />
-                    <span>{errorMessage}</span>
-                  </div>
-                )}
-
-                <input
-                  type="text"
-                  placeholder="Card number"
-                  value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
-                  required
-                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors font-mono"
+              <div>
+                <label className="block text-xs tracking-wider-2 uppercase text-gold mb-2">
+                  Additional Notes
+                </label>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Colour preferences, special requests…"
+                  rows={3}
+                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-300/40 focus:outline-none focus:border-gold transition-colors resize-none"
                 />
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="MM / YY"
-                    value={cardExpiry}
-                    onChange={(e) => setCardExpiry(e.target.value)}
-                    required
-                    className="bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors font-mono"
-                  />
-                  <input
-                    type="text"
-                    placeholder="CVC"
-                    value={cardCvc}
-                    onChange={(e) => setCardCvc(e.target.value)}
-                    required
-                    className="bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors font-mono"
-                  />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Name on card"
-                  value={cardName}
-                  onChange={(e) => setCardName(e.target.value)}
-                  required
-                  className="w-full bg-transparent border border-chocolate-600 px-4 py-3 text-sm text-ivory-100 focus:outline-none focus:border-gold transition-colors"
-                />
+              </div>
+            </div>
 
-                <div className="flex gap-3 mt-6">
-                  <button
-                    type="button"
-                    onClick={() => setStep('shipping')}
-                    disabled={isSubmitting}
-                    className="text-xs tracking-wider-2 uppercase text-ivory-300/60 hover:text-gold transition-colors px-6 py-4 disabled:opacity-50"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-gold text-chocolate-950 text-xs tracking-wider-2 uppercase px-10 py-4 hover:bg-gold-light transition-colors disabled:opacity-50 flex items-center gap-2"
-                  >
-                    {isSubmitting && <Loader2 size={16} className="animate-spin" />}
-                    {isSubmitting ? 'Securing Order...' : `Place Order · ${new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(grandTotal)}`}
-                  </button>
-                </div>
-              </form>
-            )}
+            <button
+              onClick={handleOrder}
+              disabled={!isValid}
+              className="mt-10 w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm tracking-wider-2 uppercase py-4 transition-colors"
+            >
+              <MessageCircle size={18} />
+              Order via WhatsApp
+            </button>
+
+            <p className="text-xs text-ivory-300/50 text-center mt-4 leading-relaxed">
+              Clicking the button opens WhatsApp with your order pre-filled. Your cart will be
+              cleared once sent.
+            </p>
           </div>
 
-          {/* Order summary */}
-          <div className="bg-chocolate-900 p-6 h-fit border border-chocolate-800">
-            <h2 className="font-serif text-lg text-ivory-50 mb-6">Order Summary</h2>
-            <div className="space-y-4 max-h-64 overflow-y-auto">
+          {/* Right — order summary */}
+          <div>
+            <h2 className="text-xs tracking-wider-2 uppercase text-gold mb-6">Order Summary</h2>
+            <div className="space-y-4 mb-8">
               {cart.map((item, i) => (
-                <div key={i} className="flex gap-3">
-                  <Img thumb src={item.product.images[0]} alt="" className="w-14 h-18 object-cover bg-chocolate-800 flex-shrink-0" />
-                  <div className="flex-1">
-                    <p className="text-xs text-ivory-100 font-medium">{item.product.name}</p>
-                    <p className="text-[10px] text-ivory-300/50">{item.color} · {item.size} · Qty {item.quantity}</p>
-                    <p className="text-xs text-gold mt-1"><Price amount={item.product.price * item.quantity} /></p>
+                <div key={i} className="flex gap-4">
+                  <div className="w-16 h-16 bg-chocolate-800 overflow-hidden flex-shrink-0">
+                    <Img
+                      src={item.product.images[0]}
+                      alt={item.product.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-ivory-100 truncate">{item.product.name}</p>
+                    <p className="text-xs text-ivory-300/60 mt-1">
+                      {item.size} · {item.color} · ×{item.quantity}
+                    </p>
+                  </div>
+                  <span className="text-sm text-ivory-100 flex-shrink-0">
+                    <Price amount={item.product.price * item.quantity} />
+                  </span>
                 </div>
               ))}
             </div>
 
-            <div className="border-t border-chocolate-700 mt-6 pt-4 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-ivory-300/60">Subtotal</span>
-                <span className="text-ivory-100"><Price amount={cartTotal} /></span>
+            <div className="border-t border-chocolate-700 pt-4 space-y-3">
+              <div className="flex justify-between text-sm text-ivory-200/70">
+                <span>Subtotal</span>
+                <Price amount={cartTotal} />
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-ivory-300/60 flex items-center gap-1"><Truck size={14} /> Shipping</span>
-                <span className="text-ivory-100"><Price amount={shippingCost} /></span>
+              <div className="flex justify-between text-xs text-ivory-300/50">
+                <span>Shipping</span>
+                <span>Confirmed via WhatsApp</span>
               </div>
-              <div className="flex justify-between text-base pt-2 border-t border-chocolate-700 font-serif">
-                <span className="text-ivory-50">Total</span>
-                <span className="text-gold"><Price amount={grandTotal} /></span>
+              <div className="flex justify-between text-base text-ivory-50 font-medium pt-2 border-t border-chocolate-700">
+                <span>Total</span>
+                <Price amount={cartTotal} />
               </div>
+            </div>
+
+            {/* WhatsApp contact info */}
+            <div className="mt-8 bg-chocolate-900 border border-chocolate-700 p-5">
+              <p className="text-xs tracking-wider-2 uppercase text-gold mb-2">Contact Us Directly</p>
+              <a
+                href="https://wa.me/2348134525822"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-green-400 hover:text-green-300 transition-colors"
+              >
+                <MessageCircle size={16} />
+                +234 813 452 5822
+              </a>
+              <a
+                href="mailto:Melekwears@gmail.com"
+                className="text-sm text-ivory-300/60 hover:text-ivory-100 transition-colors mt-2 block"
+              >
+                Melekwears@gmail.com
+              </a>
             </div>
           </div>
         </div>
