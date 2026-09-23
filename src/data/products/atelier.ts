@@ -43,6 +43,7 @@ export const atelierGallery = [
   '/images/atelier/IMG_1850.JPG',
   '/images/atelier/IMG_1856.JPG',
   '/images/atelier/IMG_2134.jpg',
+  '/images/atelier/IMG_2429.PNG',
 ];
 
 // ─── Products ────────────────────────────────────────────────────────────

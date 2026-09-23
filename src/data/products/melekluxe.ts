@@ -77,11 +77,11 @@ export const melekluxeProducts: Product[] = [
     signatureDescription: 'Up-and-down sets from Atelier and Melek Luxe, cut to match.',
   },
   {
-    id: 'melek-short-nicker',
-    name: 'Melek Short Nicker',
+    id: 'melek-round-neck',
+    name: 'Melek Luxe Round Neck 2piece-sets',
     collection: 'Melek Luxe Collections',
     category: 'Shorts',
-    price: 20000,
+    price: 60000,
     description: 'A relaxed short nicker in the Melek Luxe knit — the easy, everyday bottom to wear with any Melek tee or shirt.',
     colors: [
       { name: 'Black', hex: '#1a1a1a' },
