@@ -1,5 +1,7 @@
-import { Instagram, Twitter, Mail, MessageCircle } from 'lucide-react';
+import { Instagram, Mail, Phone } from 'lucide-react';
 import type { Collection } from '@/types';
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon';
+import XIcon from '@/components/icons/XIcon';
 
 interface FooterProps {
   onNavigate: (page: string, collection?: Collection) => void;
@@ -78,11 +80,11 @@ export default function Footer({ onNavigate }: FooterProps) {
               href="https://twitter.com/melekwears"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Twitter / X"
-              className="flex flex-col items-center gap-2 text-ivory-200/70 hover:text-sky-400 transition-colors group"
+              aria-label="X"
+              className="flex flex-col items-center gap-2 text-ivory-200/70 hover:text-ivory-50 transition-colors group"
             >
-              <Twitter size={22} />
-              <span className="text-[10px] tracking-wider-2 uppercase">Twitter</span>
+              <XIcon size={22} />
+              <span className="text-[10px] tracking-wider-2 uppercase">X</span>
             </a>
 
             <a
@@ -106,14 +108,23 @@ export default function Footer({ onNavigate }: FooterProps) {
             </a>
 
             <a
-              href="https://wa.me/2348134525822"
+              href="https://wa.me/2348134525821"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp"
               className="flex flex-col items-center gap-2 text-ivory-200/70 hover:text-green-400 transition-colors group"
             >
-              <MessageCircle size={22} />
+              <WhatsAppIcon size={22} />
               <span className="text-[10px] tracking-wider-2 uppercase">WhatsApp</span>
+            </a>
+
+            <a
+              href="tel:+2348134525821"
+              aria-label="Call"
+              className="flex flex-col items-center gap-2 text-ivory-200/70 hover:text-gold transition-colors group"
+            >
+              <Phone size={22} />
+              <span className="text-[10px] tracking-wider-2 uppercase">Call</span>
             </a>
           </div>
 
@@ -126,12 +137,12 @@ export default function Footer({ onNavigate }: FooterProps) {
             </a>
             <span className="hidden sm:block">·</span>
             <a
-              href="https://wa.me/2348134525822"
+              href="https://wa.me/2348134525821"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-green-400 transition-colors"
             >
-              +234 813 452 5822
+              +234 813 452 5821
             </a>
           </div>
         </div>
@@ -160,10 +171,10 @@ export default function Footer({ onNavigate }: FooterProps) {
                 href="https://twitter.com/melekwears"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Twitter"
-                className="text-ivory-200/60 hover:text-sky-400 transition-colors"
+                aria-label="X"
+                className="text-ivory-200/60 hover:text-ivory-50 transition-colors"
               >
-                <Twitter size={18} />
+                <XIcon size={18} />
               </a>
               <a
                 href="https://pinterest.com/melekwears"
@@ -175,13 +186,20 @@ export default function Footer({ onNavigate }: FooterProps) {
                 <PinterestIcon size={18} />
               </a>
               <a
-                href="https://wa.me/2348134525822"
+                href="https://wa.me/2348134525821"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
                 className="text-ivory-200/60 hover:text-green-400 transition-colors"
               >
-                <MessageCircle size={18} />
+                <WhatsAppIcon size={18} />
+              </a>
+              <a
+                href="tel:+2348134525821"
+                aria-label="Call"
+                className="text-ivory-200/60 hover:text-gold transition-colors"
+              >
+                <Phone size={18} />
               </a>
             </div>
           </div>

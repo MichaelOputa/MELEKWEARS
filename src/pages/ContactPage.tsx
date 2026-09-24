@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Mail, MapPin, MessageCircle, Instagram, Twitter } from 'lucide-react';
+import { Mail, MapPin, Instagram, Phone } from 'lucide-react';
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon';
+import XIcon from '@/components/icons/XIcon';
 
-const WHATSAPP_NUMBER = '2348134525822';
+const WHATSAPP_NUMBER = '2348134525821';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', subject: '', message: '' });
@@ -84,7 +86,7 @@ export default function ContactPage() {
                   type="submit"
                   className="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white text-xs tracking-wider-2 uppercase px-10 py-4 transition-colors"
                 >
-                  <MessageCircle size={16} />
+                  <WhatsAppIcon size={16} />
                   Send via WhatsApp
                 </button>
               </form>
@@ -96,16 +98,28 @@ export default function ContactPage() {
             <h2 className="font-serif text-2xl text-ivory-50 mb-8">Get in Touch</h2>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <MessageCircle size={20} className="text-green-400 mt-1 flex-shrink-0" />
+                <WhatsAppIcon size={20} className="text-green-400 mt-1 flex-shrink-0" />
                 <div>
                   <p className="text-xs tracking-wider-2 uppercase text-ivory-100">WhatsApp</p>
                   <a
-                    href="https://wa.me/2348134525822"
+                    href="https://wa.me/2348134525821"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-green-400 hover:text-green-300 mt-1 block transition-colors"
                   >
-                    +234 813 452 5822
+                    +234 813 452 5821
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <Phone size={20} className="text-gold mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-xs tracking-wider-2 uppercase text-ivory-100">Call</p>
+                  <a
+                    href="tel:+2348134525821"
+                    className="text-sm text-ivory-200/60 hover:text-gold mt-1 block transition-colors"
+                  >
+                    +234 813 452 5821
                   </a>
                 </div>
               </div>
@@ -136,14 +150,14 @@ export default function ContactPage() {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <Twitter size={20} className="text-sky-400 mt-1 flex-shrink-0" />
+                <XIcon size={20} className="text-ivory-100 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-xs tracking-wider-2 uppercase text-ivory-100">Twitter / X</p>
+                  <p className="text-xs tracking-wider-2 uppercase text-ivory-100">X</p>
                   <a
                     href="https://twitter.com/melekwears"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-ivory-200/60 hover:text-sky-400 mt-1 block transition-colors"
+                    className="text-sm text-ivory-200/60 hover:text-ivory-50 mt-1 block transition-colors"
                   >
                     @melekwears
                   </a>
@@ -162,7 +176,7 @@ export default function ContactPage() {
               <p className="text-xs tracking-wider-2 uppercase text-gold mb-4">Customer Care</p>
               <p className="text-sm text-ivory-200/60 leading-relaxed">
                 For order inquiries, shipping questions, or product care guidance, our team is
-                available to assist you via WhatsApp.
+                available to assist you via WhatsApp or a phone call.
               </p>
             </div>
           </div>

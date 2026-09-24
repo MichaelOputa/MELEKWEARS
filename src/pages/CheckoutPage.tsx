@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ChevronLeft, MessageCircle, Check } from 'lucide-react';
+import { ChevronLeft, Check, Phone } from 'lucide-react';
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon';
 import { useStore } from '@/store/StoreContext';
 import Price from '@/components/Price';
 import Img from '@/components/Img';
@@ -8,7 +9,7 @@ interface CheckoutPageProps {
   onNavigate: (page: string) => void;
 }
 
-const WHATSAPP_NUMBER = '2348134525822';
+const WHATSAPP_NUMBER = '2348134525821';
 
 function formatWhatsAppMessage(
   cart: { product: { name: string; price: number }; size: string; color: string; quantity: number }[],
@@ -205,7 +206,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
               disabled={!isValid}
               className="mt-10 w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm tracking-wider-2 uppercase py-4 transition-colors"
             >
-              <MessageCircle size={18} />
+              <WhatsAppIcon size={18} />
               Order via WhatsApp
             </button>
 
@@ -260,13 +261,20 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             <div className="mt-8 bg-chocolate-900 border border-chocolate-700 p-5">
               <p className="text-xs tracking-wider-2 uppercase text-gold mb-2">Contact Us Directly</p>
               <a
-                href="https://wa.me/2348134525822"
+                href="https://wa.me/2348134525821"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-green-400 hover:text-green-300 transition-colors"
               >
-                <MessageCircle size={16} />
-                +234 813 452 5822
+                <WhatsAppIcon size={16} />
+                +234 813 452 5821
+              </a>
+              <a
+                href="tel:+2348134525821"
+                className="flex items-center gap-2 text-sm text-ivory-300/60 hover:text-gold transition-colors mt-2"
+              >
+                <Phone size={16} />
+                +234 813 452 5821
               </a>
               <a
                 href="mailto:Melekwears@gmail.com"

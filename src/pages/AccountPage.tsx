@@ -1,10 +1,19 @@
-import { Instagram, Twitter, Mail, MessageCircle } from 'lucide-react';
+import { Instagram, Mail, Phone } from 'lucide-react';
+import type { ElementType } from 'react';
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon';
+import XIcon from '@/components/icons/XIcon';
 
 interface AccountPageProps {
   onNavigate: (page: string) => void;
 }
 
-const socials = [
+const socials: {
+  label: string;
+  handle: string;
+  href: string;
+  icon: ElementType | null;
+  color: string;
+}[] = [
   {
     label: 'Instagram',
     handle: '@melekwears',
@@ -13,11 +22,11 @@ const socials = [
     color: 'hover:text-pink-400',
   },
   {
-    label: 'Twitter / X',
+    label: 'X',
     handle: '@melekwears',
     href: 'https://twitter.com/melekwears',
-    icon: Twitter,
-    color: 'hover:text-sky-400',
+    icon: XIcon,
+    color: 'hover:text-ivory-50',
   },
   {
     label: 'Pinterest',
@@ -35,10 +44,17 @@ const socials = [
   },
   {
     label: 'WhatsApp',
-    handle: '+234 813 452 5822',
-    href: 'https://wa.me/2348134525822',
-    icon: MessageCircle,
+    handle: '+234 813 452 5821',
+    href: 'https://wa.me/2348134525821',
+    icon: WhatsAppIcon,
     color: 'hover:text-green-400',
+  },
+  {
+    label: 'Call',
+    handle: '+234 813 452 5821',
+    href: 'tel:+2348134525821',
+    icon: Phone,
+    color: 'hover:text-gold',
   },
 ];
 
@@ -112,7 +128,7 @@ export default function AccountPage({ onNavigate }: AccountPageProps) {
 
         {/* WhatsApp order CTA */}
         <div className="bg-chocolate-900 border border-chocolate-700 p-8 text-center">
-          <MessageCircle size={28} className="text-green-400 mx-auto mb-4" />
+          <WhatsAppIcon size={28} className="text-green-400 mx-auto mb-4" />
           <h2 className="font-serif text-xl text-ivory-100 mb-2">Ready to Order?</h2>
           <p className="text-sm text-ivory-200/60 mb-6 leading-relaxed">
             Browse the shop, add your favourites to your bag, and check out via WhatsApp — our team
@@ -126,7 +142,7 @@ export default function AccountPage({ onNavigate }: AccountPageProps) {
               Shop Now
             </button>
             <a
-              href="https://wa.me/2348134525822"
+              href="https://wa.me/2348134525821"
               target="_blank"
               rel="noopener noreferrer"
               className="border border-green-600 text-green-400 text-xs tracking-wider-2 uppercase px-8 py-3 hover:bg-green-600/10 transition-colors"

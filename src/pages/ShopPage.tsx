@@ -7,6 +7,18 @@ import ProductCard from '@/components/ProductCard';
 import { formatPrice } from '@/lib/format';
 import type { Product, Collection, Size } from '@/types';
 import Img from '@/components/Img';
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon';
+
+const WHATSAPP_NUMBER = '2348134525821';
+
+/** wa.me link that opens a chat with the lookbook photo's full URL pre-filled, so the team sees exactly which piece the shopper is asking about. */
+function lookbookInquireLink(src: string): string {
+  const imageUrl = `${window.location.origin}${src}`;
+  const text = encodeURIComponent(
+    `Hi MelekWears! I'd like to inquire about this piece from your Lookbook:\n${imageUrl}`
+  );
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+}
 
 interface ShopPageProps {
   /** Collection to open on (e.g. from a footer or collection-card link). Omit or null for all. */
@@ -349,15 +361,30 @@ export default function ShopPage({ initialCollection = null, onQuickView, onNavi
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
             {lookbookImages.map((src) => (
-              <button
+              <div
                 key={src}
-                onClick={() => setSelectedLookImage(src)}
-                className={`aspect-[3/4] overflow-hidden bg-chocolate-800 border-2 transition-colors ${
+                className={`relative aspect-[3/4] overflow-hidden bg-chocolate-800 border-2 transition-colors ${
                   selectedLookImage === src ? 'border-gold' : 'border-transparent hover:border-ivory-300/40'
                 }`}
               >
-                <Img thumb src={src} alt="" className="w-full h-full object-cover" />
-              </button>
+                <button
+                  onClick={() => setSelectedLookImage(src)}
+                  className="absolute inset-0 w-full h-full"
+                  aria-label="View image"
+                >
+                  <Img thumb src={src} alt="" className="w-full h-full object-cover" />
+                </button>
+                <a
+                  href={lookbookInquireLink(src)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute bottom-0 inset-x-0 flex items-center justify-center gap-1.5 bg-chocolate-950/85 backdrop-blur-sm py-2 text-[10px] tracking-wider-2 uppercase text-ivory-50 hover:bg-green-600 transition-colors"
+                >
+                  <WhatsAppIcon size={13} />
+                  Inquire
+                </a>
+              </div>
             ))}
           </div>
         </div>
