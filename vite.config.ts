@@ -19,6 +19,7 @@ const COLLECTION_FOLDERS: Record<string, string> = {
   'Melek Luxe Collections': 'melekluxe',
   Riviera: 'rivieracollection',
   'Melek Essentials': 'melekessentials',
+  'Female Collection': 'female',
 };
 
 const WEB_IMAGE = /\.(jpe?g|png|webp|gif|avif)$/i;
@@ -37,8 +38,8 @@ function collectionImages(): Plugin {
       const result: Record<string, string[]> = {};
       for (const [collection, folder] of Object.entries(COLLECTION_FOLDERS)) {
         const dir = fileURLToPath(new URL(`./public/images/${folder}`, import.meta.url));
-        result[collection] = fs
-          .readdirSync(dir)
+        // A folder that doesn't exist yet just means "no images" instead of crashing the build.
+        result[collection] = (fs.existsSync(dir) ? fs.readdirSync(dir) : [])
           .filter((file) => WEB_IMAGE.test(file))
           .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
           .map((file) => `/images/${folder}/${encodeURI(file)}`);

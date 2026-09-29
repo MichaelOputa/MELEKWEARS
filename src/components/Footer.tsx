@@ -24,7 +24,7 @@ function PinterestIcon({ size = 18 }: { size?: number }) {
 
 export default function Footer({ onNavigate }: FooterProps) {
   const footerLinks = {
-    Shop: ['Shop All', 'Riviera', 'Melek Luxe Collections', 'Atelier', 'Melek Essentials'],
+    Shop: ['Shop All', 'Riviera', 'Melek Luxe Collections', 'Atelier', 'Melek Essentials', 'Female Collection'],
     Brand: ['About', 'Collections', 'Craftsmanship', 'Journal', 'Contact'],
     Support: ['Shipping & Returns', 'Privacy Policy', 'Terms & Conditions'],
   };
@@ -34,6 +34,7 @@ export default function Footer({ onNavigate }: FooterProps) {
     'Melek Luxe Collections': 'Melek Luxe Collections',
     Atelier: 'Atelier',
     'Melek Essentials': 'Melek Essentials',
+    'Female Collection': 'Female Collection',
   };
 
   const mapLinkToPage = (link: string): string => {
@@ -43,6 +44,7 @@ export default function Footer({ onNavigate }: FooterProps) {
       'Melek Luxe Collections': 'shop',
       Atelier: 'shop',
       'Melek Essentials': 'shop',
+      'Female Collection': 'shop',
 
       About: 'about',
       Collections: 'collections',

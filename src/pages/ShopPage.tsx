@@ -27,7 +27,7 @@ interface ShopPageProps {
   onNavigate: (page: string, collection?: Collection) => void;
 }
 
-const allCollections: Collection[] = ['Riviera', 'Melek Luxe Collections', 'Atelier', 'Melek Essentials'];
+const allCollections: Collection[] = ['Riviera', 'Melek Luxe Collections', 'Atelier', 'Melek Essentials', 'Female Collection'];
 const allSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const allColors = [
   { name: 'Ivory', hex: '#f0e6d9' },

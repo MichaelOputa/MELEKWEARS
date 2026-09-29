@@ -31,7 +31,7 @@ export const melekessentialsProducts: Product[] = [
     name: 'Melek Essential Crewneck Tee',
     collection: 'Melek Essentials',
     category: 'Tops',
-    price: 45000,
+    price: 50000,
     description:
       'An indispensable luxury daily staple cut from premium heavy-combed organic cotton with a reinforced ribbed crew neckline. Engineered for enduring shape retention, an effortless drape, and breathable all-day comfort.',
     colors: [
