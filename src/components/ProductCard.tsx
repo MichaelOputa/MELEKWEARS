@@ -10,7 +10,7 @@ interface ProductCardProps {
   onNavigate: (page: string) => void;
 }
 
-export default function ProductCard({ product, onQuickView, onNavigate }: ProductCardProps) {
+export default function ProductCard({ product, onQuickView }: ProductCardProps) {
   const { toggleWishlist, isInWishlist, addToCart } = useStore();
   const wished = isInWishlist(product.id);
 
@@ -72,7 +72,7 @@ export default function ProductCard({ product, onQuickView, onNavigate }: Produc
         >
           {product.name}
         </button>
-        <p className="text-sm text-ivory-200 mt-1"><Price amount={product.price} /></p>
+        <p className="text-sm text-ivory-200 mt-1"><Price amount={product.price} usdAmount={product.priceUSD} /></p>
         <div className="flex items-center justify-center gap-1.5 mt-2">
           {product.colors.map((color) => (
             <span

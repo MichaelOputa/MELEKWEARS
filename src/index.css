@@ -33,6 +33,12 @@
   .reveal-delay-4 { transition-delay: 0.6s; }
 }
 
+@layer components {
+  .admin-input {
+    @apply mt-2 w-full border border-chocolate-600 bg-chocolate-900 px-3 py-3 text-sm normal-case tracking-normal text-ivory-100 outline-none transition-colors focus:border-gold;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

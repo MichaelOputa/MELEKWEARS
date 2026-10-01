@@ -1,0 +1,66 @@
+import type { Product } from '@/types';
+
+const femaleImage = (number: number) => `/images/female%20collections/female-${number}.jpg`;
+
+export const femaleProducts: Product[] = [
+  {
+    id: 'female-everyday-lounge-set',
+    name: 'Everyday Lounge Set',
+    collection: 'Female Collection',
+    category: 'Sets',
+    price: 78000,
+    description: 'A relaxed two-piece lounge set with a roomy short-sleeve top and matching straight-leg trousers. Available in four versatile neutral shades.',
+    colors: [
+      { name: 'Espresso', hex: '#392219' },
+      { name: 'Stone', hex: '#a89d8d' },
+      { name: 'Caramel', hex: '#a96736' },
+      { name: 'Black', hex: '#171717' },
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    images: [femaleImage(67), femaleImage(68), femaleImage(69), femaleImage(70)],
+  },
+  {
+    id: 'female-classic-beige-jogger-set',
+    name: 'Classic Beige Jogger Set',
+    collection: 'Female Collection',
+    category: 'Sets',
+    price: 78000,
+    description: 'A soft two-piece sweatshirt and jogger set in classic beige, made for comfortable everyday wear.',
+    colors: [{ name: 'Classic Beige', hex: '#c6b8a6' }],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    images: [femaleImage(71)],
+  },
+  {
+    id: 'female-ivory-burgos-set',
+    name: 'Ivory Tee & Burgos Set',
+    collection: 'Female Collection',
+    category: 'Sets',
+    price: 78000,
+    description: 'A relaxed ivory oversized tee paired with flowing Burgos trousers for an easy, refined two-piece look.',
+    colors: [{ name: 'Ivory', hex: '#eee9df' }],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    images: [femaleImage(72)],
+  },
+  {
+    id: 'female-burgundy-burgos-set',
+    name: 'Burgundy Burgos Set',
+    collection: 'Female Collection',
+    category: 'Sets',
+    price: 78000,
+    description: 'A comfortable oversized tee and wide-leg Burgos trousers in a deep burgundy shade.',
+    colors: [{ name: 'Burgundy', hex: '#54252d' }],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    images: [femaleImage(73)],
+  },
+  {
+    id: 'female-taupe-burgos-set',
+    name: 'Taupe Burgos Set',
+    collection: 'Female Collection',
+    category: 'Sets',
+    price: 78000,
+    description: 'A relaxed taupe tee and matching wide-leg Burgos trousers in a timeless neutral colorway.',
+    colors: [{ name: 'Taupe', hex: '#8e8378' }],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    images: [femaleImage(74)],
+  },
+];

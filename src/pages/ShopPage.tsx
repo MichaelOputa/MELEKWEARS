@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { SlidersHorizontal, X, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
-import { products, heroImage, getCollectionImages } from '@/data/products';
+import { heroImage, getCollectionImages } from '@/data/products';
 import { useStore } from '@/store/StoreContext';
 import { useReveal } from '@/hooks/useReveal';
 import ProductCard from '@/components/ProductCard';
@@ -50,7 +50,7 @@ const MAX_PRICE = 150000;
 type SortOption = 'featured' | 'price-low' | 'price-high' | 'name';
 
 export default function ShopPage({ initialCollection = null, onQuickView, onNavigate }: ShopPageProps) {
-  const { wishlist } = useStore();
+  const { wishlist, products } = useStore();
   const { ref, visible } = useReveal();
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -101,7 +101,7 @@ export default function ShopPage({ initialCollection = null, onQuickView, onNavi
     }
 
     return result;
-  }, [selectedCollections, selectedSizes, selectedColors, priceRange, sortBy, showWishlistOnly, wishlist]);
+  }, [products, selectedCollections, selectedSizes, selectedColors, priceRange, sortBy, showWishlistOnly, wishlist]);
 
   const clearFilters = () => {
     setSelectedCollections(new Set());

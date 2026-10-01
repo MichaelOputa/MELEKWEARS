@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { StoreProvider } from '@/store/StoreContext';
+import { StoreProvider, useStore } from '@/store/StoreContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
@@ -15,11 +15,12 @@ import JournalPage from '@/pages/JournalPage';
 import ContactPage from '@/pages/ContactPage';
 import CheckoutPage from '@/pages/CheckoutPage';
 import AccountPage from '@/pages/AccountPage';
-import { products } from '@/data/products';
+import AdminPage from '@/pages/AdminPage';
 import type { Product, Collection } from '@/types';
 
 function AppContent() {
-  const [page, setPage] = useState('home');
+  const { products } = useStore();
+  const [page, setPage] = useState(() => window.location.pathname.replace(/\/+$/, '') === '/admin' ? 'admin' : 'home');
   const [selectedProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [productPageItem, setProductPageItem] = useState<Product | null>(null);
 
@@ -39,7 +40,7 @@ function AppContent() {
       setPage('product');
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
-  }, []);
+  }, [products]);
 
   const handleQuickView = useCallback((product: Product) => {
     setQuickViewProduct(product);
@@ -89,7 +90,9 @@ function AppContent() {
       case 'checkout':
         return <CheckoutPage onNavigate={handleNavigate} />;
       case 'account':
-        return <AccountPage onNavigate={handleNavigate} onQuickView={handleQuickView} />;
+        return <AccountPage onNavigate={handleNavigate} />;
+      case 'admin':
+        return <AdminPage />;
       default:
         return <HomePage onNavigate={handleNavigate} onQuickView={handleQuickView} />;
     }

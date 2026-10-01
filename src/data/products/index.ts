@@ -27,6 +27,7 @@ import { atelierProducts, atelierGallery, atelierCoverImage } from './atelier';
 import { melekluxeProducts, melekluxeGallery, melekluxeCoverImage } from './melekluxe';
 import { rivieraProducts, rivieracollectionGallery, rivieraCoverImage } from './riviera';
 import { melekessentialsProducts, melekessentialsGallery, essentialsCoverImage } from './melekessentials';
+import { femaleProducts } from './female';
 import { essentialsGallery } from './brand';
 
 // ─── "All" = every lineup, in tab order ──────────────────────────────────
@@ -36,6 +37,7 @@ export const products: Product[] = [
   ...melekluxeProducts,
   ...rivieraProducts,
   ...melekessentialsProducts,
+  ...femaleProducts,
 ];
 
 export const collectionImages = {
@@ -43,6 +45,7 @@ export const collectionImages = {
   'Melek Luxe Collections': melekluxeCoverImage,
   Riviera: rivieraCoverImage,
   'Melek Essentials': essentialsCoverImage,
+  'Female Collection': femaleProducts[0].images[0],
 };
 
 export const allGalleryImages = Array.from(

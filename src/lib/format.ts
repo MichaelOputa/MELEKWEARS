@@ -19,10 +19,14 @@ export function formatPrice(amount: number): string {
 
 /** Dollar equivalent of a Naira amount, rounded to the nearest whole dollar. */
 export function formatUSD(amountNGN: number): string {
+  return formatDollarAmount(amountNGN / NGN_PER_USD);
+}
+
+export function formatDollarAmount(amountUSD: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amountNGN / NGN_PER_USD);
+  }).format(amountUSD);
 }

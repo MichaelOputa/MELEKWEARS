@@ -9,6 +9,7 @@ export interface Product {
   collection: Collection;
   category: ProductCategory;
   price: number;
+  priceUSD?: number;
   description: string;
   colors: { name: string; hex: string }[];
   sizes: Size[];

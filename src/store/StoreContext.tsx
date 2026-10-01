@@ -1,7 +1,12 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { Product, CartItem, Size } from '@/types';
+import { products as starterProducts } from '@/data/products';
+import { supabase } from '@/lib/supabase';
 
 interface StoreContextValue {
+  products: Product[];
+  saveProduct: (product: Product) => Promise<void>;
+  deleteProduct: (product: Product) => Promise<void>;
   cart: CartItem[];
   wishlist: string[];
   isCartOpen: boolean;
@@ -23,6 +28,7 @@ interface StoreContextValue {
 const StoreContext = createContext<StoreContextValue | undefined>(undefined);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
+  const [products, setProducts] = useState<Product[]>(starterProducts);
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('melek-cart');
@@ -44,6 +50,57 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [isCartOpen, setCartOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!supabase) return;
+    let active = true;
+    void supabase
+      .from('catalog_products')
+      .select('id, product, is_deleted')
+      .then(({ data }) => {
+        if (!active || !data) return;
+        const overrides = new Map(data.map((row) => [row.id, row.product as Product]));
+        const deleted = new Set(data.filter((row) => row.is_deleted).map((row) => row.id));
+        const merged = starterProducts
+          .filter((product) => !deleted.has(product.id))
+          .map((product) => overrides.get(product.id) ?? product);
+        for (const row of data) {
+          if (!row.is_deleted && !starterProducts.some((product) => product.id === row.id)) {
+            merged.push(row.product as Product);
+          }
+        }
+        setProducts(merged);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const saveProduct = async (product: Product) => {
+    if (!supabase) throw new Error('Connect Supabase before saving products.');
+    const { error } = await supabase.from('catalog_products').upsert({
+      id: product.id,
+      product,
+      is_deleted: false,
+    });
+    if (error) throw error;
+    setProducts((current) => {
+      const index = current.findIndex((item) => item.id === product.id);
+      if (index < 0) return [...current, product];
+      return current.map((item) => (item.id === product.id ? product : item));
+    });
+  };
+
+  const deleteProduct = async (product: Product) => {
+    if (!supabase) throw new Error('Connect Supabase before deleting products.');
+    const { error } = await supabase.from('catalog_products').upsert({
+      id: product.id,
+      product,
+      is_deleted: true,
+    });
+    if (error) throw error;
+    setProducts((current) => current.filter((item) => item.id !== product.id));
+  };
 
   useEffect(() => {
     localStorage.setItem('melek-cart', JSON.stringify(cart));
@@ -99,6 +156,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   return (
     <StoreContext.Provider
       value={{
+        products,
+        saveProduct,
+        deleteProduct,
         cart,
         wishlist,
         isCartOpen,

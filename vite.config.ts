@@ -19,7 +19,7 @@ const COLLECTION_FOLDERS: Record<string, string> = {
   'Melek Luxe Collections': 'melekluxe',
   Riviera: 'rivieracollection',
   'Melek Essentials': 'melekessentials',
-  'Female Collection': 'female',
+  'Female Collection': 'female collections',
 };
 
 const WEB_IMAGE = /\.(jpe?g|png|webp|gif|avif)$/i;
